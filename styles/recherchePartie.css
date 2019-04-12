@@ -1,0 +1,84 @@
+body {
+	background-color: #172935;
+	color: white;
+	font-family: 'Roboto';
+	font-size: 16px;
+	margin: 0%;
+	padding: 0%;
+}
+
+p {
+	color: white;
+	font-family: 'Roboto';
+	font-size: 30px;
+	margin: 0%;
+	padding: 0%;
+}
+
+header {
+	background-image:linear-gradient(to top, #172935, #0498A2 80%);
+}
+
+img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#titre {
+	display: inline-block;
+	width: 80%;
+	font-size: 40px;
+	margin-top: 0;
+  	padding-left: 50px;
+  	padding-top: 50px;
+  	padding-bottom: 70px;
+}
+
+table {
+	margin-left: 20%;
+	width: 65%;
+	border-radius: 10px;
+	border: 1px solid white;
+	padding: 10px;
+	background-image:linear-gradient(to top, #172935, #0498A2 25%);
+}
+
+th {
+	vertical-align: top;
+}
+
+fieldset {
+	border-radius: 10px;
+	border: 1px solid white;
+	height: 460px;
+	padding-top: 25px;
+}
+
+input {
+	border: none;
+	transition: 0.3s;
+}
+
+#loader {
+  border: 16px solid #ffffff;
+  border-top: 16px solid #172935;
+  border-bottom: 16px solid #172935;
+  border-radius: 50%;
+  width: 180px;
+  height: 180px;
+  left:center;
+  right:center;
+  top:center;
+  bottom:center;
+  margin:auto;
+  animation: spin 4s linear infinite;
+}
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

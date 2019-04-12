@@ -1,0 +1,45 @@
+body {
+	background-color: #172935;
+	color: white;
+	font-family: 'Roboto';
+	font-size: 16px;
+	margin: 0%;
+	padding: 0%;
+}
+
+header {
+	background-image:linear-gradient(to top, #172935, #0498A2 80%);
+}
+
+img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#titre {
+	display: inline-block;
+	width: 80%;
+	font-size: 40px;
+	margin-top: 0;
+  	padding-left: 50px;
+  	padding-top: 50px;
+  	padding-bottom: 70px;
+}
+
+table {
+	margin-left: 2%;
+	width: 90%;
+	border-radius: 10px;
+	border: 1px solid white;
+	padding: 10px;
+	background-image:linear-gradient(to top, #172935, #0498A2 25%);
+}
+
+th {
+	vertical-align: top;
+}
+
+#liens{
+	width: 10%;
+}
