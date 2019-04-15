@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `partie` (
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `login` varchar(20) NOT NULL,
-  `mdp` varchar(20) NOT NULL,
+  `mdp` varchar(1000) NOT NULL,
   `admin` tinyint(1) NOT NULL,
   `score` int(11) NOT NULL,
   `classement` int(11) NOT NULL,
