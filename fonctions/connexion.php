@@ -8,15 +8,15 @@
 			$user = new User($login,$mdp);
 
 			if($user->existe()){
-				header("Location: //localhost/projetweb-master/index.php");
+				header("Location: //localhost/BlaireauxEtKeke/index.php");
 				session_start();
 
 				$_SESSION['user']=$user;
 			}
-		else header("Location: //localhost/projetweb-master/pages/login.php?&pb=badLoginOuMdp");
+		else header("Location: //localhost/BlaireauxEtKeke/pages/login.php?&pb=badLoginOuMdp");
 
 	}
 	else{
-		header("Location: //localhost/projetweb-master/pages/login.php?&pb=champsVide");
+		header("Location: //localhost/BlaireauxEtKeke/pages/login.php?&pb=champsVide");
 	}
 ?>

@@ -23,17 +23,17 @@
 				$userAAjouter->ajouterBD();
 			}
 			else{
-				header("Location: //localhost/projetweb-master/pages/login.php?&pb=loginExistant"	);
+				header("Location: //localhost/BlaireauxEtKeke/pages/login.php?&pb=loginExistant"	);
 			}
 		}
 		else{
-			header("Location: //localhost/projetweb-master/pages/login.php?&pb=mdpDiff");
+			header("Location: //localhost/BlaireauxEtKeke/pages/login.php?&pb=mdpDiff");
 		}
 
 		
 	}
 	else{
-		header("Location: //localhost/projetweb-master/pages/login.php?&pb=champsVide");
+		header("Location: //localhost/BlaireauxEtKeke/pages/login.php?&pb=champsVide");
 	}
 
 	
