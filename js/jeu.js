@@ -39,9 +39,9 @@ function Point(x, y) {
 }
 
 function init(nbF, nbM, dim) {
-	var this.nbflaques = nbF;
-	var this.nbmurs = nbM;
-	var this.dimension = dim;
+	var nbflaques = nbF;
+	var nbmurs = nbM;
+	var dimension = dim;
 
 	console.log(nbflaques);
 	console.log(nbmurs);

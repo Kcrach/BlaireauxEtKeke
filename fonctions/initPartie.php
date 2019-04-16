@@ -16,12 +16,14 @@
 							<title>Connexion</title>
 							<link rel="stylesheet" href="../styles/accueil.css" name="theme" id="theme">
 							<link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet">
+							<script src="../js/jeu.js"></script>
+							<script src="../lib/three.js"></script>
 						</head>
 
 						<body onload="init('.$nbFlaques.','.$nbMurs.','.$dimensionGrille.');"></body>
 
-						<script src="../js/jeu.js"></script>
-						<script src="../lib/three.js"></script>
+						
+						
 					</html>';
 
 		echo $html;
