@@ -8,9 +8,9 @@
 						<head>
 							<meta charset="utf-8">
 							<title>Connexion</title>
-							<link rel="stylesheet" href="styles/accueil.css" name="theme" id="theme">
+							<link rel="stylesheet" href="../styles/accueil.css" name="theme" id="theme">
 							<link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet">
-							<!--<script src="js/login.js"></script>-->
+							<!--<script src="../js/login.js"></script>-->
 						</head>
 
 					<body>
@@ -21,7 +21,7 @@
 
 						<img src="../img/badger.png" align="center"/>
 
-						<form method="post" enctype="" action="../fonctions/creerPartie.php">
+						<form method="post" enctype="" action="../fonctions/initPartie.php">
 							<label for="dimensionGrille">Dimension de la grille</label></br>
 							<input type="number" id="dimensionGrille" name="dimensionGrille"/></br>
 

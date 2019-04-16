@@ -1,19 +1,20 @@
 var width = 1000;
 var height = 700;
 
-var mapWidth = 7;
-var mapHeight = 7;
+var nbflaques;
+var nbmurs;
+var dimension;
 
 var vitDep = 0.1;
 var vitRot = 9;
 
-var nbmurs = 6;
 var listemurs = [];
-var nbflaques = 4;
 var listeflaques = [];
 
 // définit si il y a un obstacle en face du joueur ou non
 var blocked = false;
+
+console.log('oui');
 
 /*
 Directions :
@@ -37,7 +38,15 @@ function Point(x, y) {
 	this.y = y;
 }
 
-function init() {
+function init(nbF, nbM, dim) {
+	var this.nbflaques = nbF;
+	var this.nbmurs = nbM;
+	var this.dimension = dim;
+
+	console.log(nbflaques);
+	console.log(nbmurs);
+	console.log(dimension);
+
 	//scene et rendu
 	var scene = new THREE.Scene();
 	var cam = new THREE.PerspectiveCamera(45,width/height, 0.1,1000);
@@ -58,7 +67,7 @@ function init() {
 	var cube = new THREE.Mesh(geometry, material);
 	
 	// sol
-	var plan = new THREE.BoxGeometry(mapWidth,1,mapHeight);
+	var plan = new THREE.BoxGeometry(dimension,1,dimension);
 	var solmat = new THREE.MeshPhongMaterial({color: 0x0000aa});
 	var sol = new THREE.Mesh(plan, solmat);
 	
@@ -70,8 +79,8 @@ function init() {
 		
 		do {
 			var ok = true;
-			var x = Math.floor(Math.random() * Math.floor(mapWidth-2)) +1;
-			var z = Math.floor(Math.random() * Math.floor(mapHeight-2)) +1;	
+			var x = Math.floor(Math.random() * Math.floor(dimension-2)) +1;
+			var z = Math.floor(Math.random() * Math.floor(dimension-2)) +1;	
 			listemurs.forEach(function(element) {
 				if(x == element.x && z == element.y) {
 					ok = false;
@@ -94,8 +103,8 @@ function init() {
 		
 		do {
 			var ok = true;
-			var x = Math.floor(Math.random() * Math.floor(mapWidth));
-			var z = Math.floor(Math.random() * Math.floor(mapHeight));
+			var x = Math.floor(Math.random() * Math.floor(dimension));
+			var z = Math.floor(Math.random() * Math.floor(dimension));
 			
 			listeflaques.forEach(function(element) {
 				if(x == element.x && z == element.y) {
@@ -126,8 +135,8 @@ function init() {
 	
 	sol.position.y = -0.5;
 	cube.position.y = 0.5;
-	sol.position.x = mapWidth / 2 - 0.5;
-	sol.position.z = mapHeight / 2 - 0.5;
+	sol.position.x = dimension / 2 - 0.5;
+	sol.position.z = dimension / 2 - 0.5;
 	
 	randomPosition();
 		
@@ -139,8 +148,8 @@ function init() {
 	function randomPosition() {
 		do {
 			var ok = true;
-			var x = Math.floor(Math.random() * Math.floor(mapWidth));
-			var z = Math.floor(Math.random() * Math.floor(mapHeight));
+			var x = Math.floor(Math.random() * Math.floor(dimension));
+			var z = Math.floor(Math.random() * Math.floor(dimension));
 			listemurs.forEach(function(element) {
 				if(x == element.x && z == element.y) {
 					ok = false;
@@ -161,8 +170,8 @@ function init() {
 		cam.rotation.x = THREE.Math.degToRad(0);
 		
 		debugDir();
-		console.log("Position :"); console.log(cube.position);
-		console.log("\n");
+		/*console.log("Position :"); console.log(cube.position);
+		console.log("\n");*/
 		checkCol();
 	}	
 	
@@ -176,22 +185,22 @@ function init() {
 		moving = true;
 		if(direction == 0) {
 			if(cube.position.x <= 0) {
-				cube.position.x = mapWidth;
-				cam.position.x  = mapWidth; 
+				cube.position.x = dimension;
+				cam.position.x  = dimension; 
 			}
 			cube.position.x -= vitDep;
 			cam.position.x -= vitDep;
 		}
 		else if(direction == 1) {
 			if(cube.position.z <= 0) {
-				cube.position.z = mapHeight;
-				cam.position.z  = mapHeight; 
+				cube.position.z = dimension;
+				cam.position.z  = dimension; 
 			}
 			cube.position.z -= vitDep;
 			cam.position.z -= vitDep;
 		}
 		else if(direction == 2) {
-			if(cube.position.x >= mapWidth - 1) {
+			if(cube.position.x >= dimension - 1) {
 				cube.position.x = -1;
 				cam.position.x  = -1; 
 			}
@@ -199,7 +208,7 @@ function init() {
 			cam.position.x += vitDep;
 		}
 		else if(direction == 3) {
-			if(cube.position.z >= mapHeight - 1) {
+			if(cube.position.z >= dimension - 1) {
 				cube.position.z = -1;
 				cam.position.z  = -1; 
 			}
@@ -219,8 +228,8 @@ function init() {
 		if(moveCpt >= 1) {
 			moving = false;
 			moveCpt = 0;
-			console.log(cube.position);
-			console.log("\n");
+			/*console.log(cube.position);
+			console.log("\n");*/
 			
 			checkTeleportFlaque();
 			checkCol();
@@ -284,7 +293,7 @@ function init() {
 		blocked = false;
 		listemurs.forEach(function(element) {
 			if(p.x == element.x && p.z == element.y) {
-				console.log(element);
+				//console.log(element);
 				blocked = true;
 			}
 		});
@@ -334,8 +343,8 @@ function init() {
 			switch(e.code) {
 				case "ArrowUp":
 					if(!blocked) {
-						console.log("Nouveau déplacement");
-						console.log(cube.position);
+						/*console.log("Nouveau déplacement");
+						console.log(cube.position);*/
 						move();
 					}
 					break;
@@ -351,13 +360,13 @@ function init() {
 					rotate();
 					break;
 				case "Space":
-					console.log("Nouveau déplacement");
-					console.log(cube.position);
+					/*console.log("Nouveau déplacement");
+					console.log(cube.position);*/
 					cube.position.x = 3;
 					cube.position.z = 3;
 					cam.position.x = 3;
 					cam.position.z = 3;
-					console.log(cube.position);
+					//console.log(cube.position);
 					break;
 			}
 		}
@@ -365,16 +374,16 @@ function init() {
 	
 	function debugDir() {
 		if(direction == 0) {
-			console.log("Direction : "+direction+" (GAUCHE)");
+			//console.log("Direction : "+direction+" (GAUCHE)");
 		}
 		else if(direction == 1) {
-			console.log("Direction : "+direction+" (HAUT)");
+			//console.log("Direction : "+direction+" (HAUT)");
 		}
 		else if(direction == 2) {
-			console.log("Direction : "+direction+" (DROITE)");
+			//console.log("Direction : "+direction+" (DROITE)");
 		}
 		else if(direction == 3) {
-			console.log("Direction : "+direction+" (BAS)");
+			//console.log("Direction : "+direction+" (BAS)");
 		}
 	}
 
