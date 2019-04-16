@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `mdp` varchar(1000) NOT NULL,
   `admin` tinyint(1) NOT NULL,
   `score` int(11) NOT NULL,
-  `classement` int(11) NOT NULL,
+  `classement` int(11),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
