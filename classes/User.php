@@ -1,5 +1,6 @@
 <?php
-	require("../fonctions/connexionBD.php"); //On se connecte
+	require_once __DIR__."/../config.php";
+	require_once SITE_ROOT."/fonctions/connexionBD.php";
 
 	class User{
 		//Attribut

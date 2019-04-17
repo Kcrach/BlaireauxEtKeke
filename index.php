@@ -1,9 +1,11 @@
 <?php
+	require_once __DIR__."/config.php"; // Pour résoudre les problèmes d'include, mettre cette ligne au début de chaque fichier
+										//avec le chemin de config.php par rapport au fichier actuel
+	require_once SITE_ROOT."/classes/User.php"; //puis si besoin d'un autre fichier, l'inclure comme ça depuis la racine du site
 	session_start();
 
 	if(isset($_SESSION['user'])){
-
-		$html = '<!DOCTYPE html>
+		$html1 = '<!DOCTYPE html>
 					<html lang="fr">
 
 						<head>
@@ -55,9 +57,10 @@
 										</p>
 								</th>
 
-								<th>
+								<th id="infos">';
+										
 
-								</th>
+		$html2 = 				'</th>
 							</tr>
 
 						</table>
@@ -70,7 +73,16 @@
 
 					</html>';
 
-		echo $html;
+		echo $html1;
+		$user = $_SESSION['user'];
+		$login = $user->getLogin();
+		echo "<h1> $login </h1>";
+		echo "Score : ";
+		echo  $user->getScore();
+		echo "<p></p>";
+		echo "Place : ";
+		echo $user->getClassement();
+		echo $html2;
 	}
 	else{
 		header("Location: //localhost/BlaireauxEtKeke/pages/login.php");
