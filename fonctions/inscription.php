@@ -1,5 +1,6 @@
 <?php
-	require("../classes/User.php");
+	require_once __DIR__."/../config.php";
+	require_once SITE_ROOT."/classes/User.php";
 
 	//On récupère les données passé dans le formulaire
 	if(!empty($_POST['login']) && !empty($_POST['password'] && !empty($_POST['cPassword']))){

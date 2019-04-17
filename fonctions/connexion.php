@@ -1,5 +1,6 @@
 <?php
-	require("../classes/User.php");
+	require_once __DIR__."/../config.php";
+	require_once SITE_ROOT."/classes/User.php";
 
 	if(!empty($_POST['loginConnexion']) && !empty($_POST['passwordConnexion'])){
 			$login = htmlspecialchars($_POST['loginConnexion']);
