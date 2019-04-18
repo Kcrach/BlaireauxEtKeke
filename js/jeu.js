@@ -38,7 +38,87 @@ function Point(x, y) {
 	this.y = y;
 }
 
-function init(nbF, nbM, dim) {
+function createPartie(nbF, nbM, dim){ //Quand quelqu'un crée une partie
+	var nbflaques = nbF;
+	var nbmurs = nbM;
+	var dimension = dim;
+
+	objetXHRAjoutMapEnBD  = new XMLHttpRequest();
+
+	idMap = objetXHRAjoutMapEnBD.open("get","ajouterMapBD.php",false);
+	objetXHRAjoutMapEnBD.send(null);
+	
+	console.log("ID MAP:" + idMap );
+
+	for(var i=0; i<nbmurs ; i++) {
+
+		/*var wall = new THREE.BoxGeometry(1,1,1);
+		var wallmat = new THREE.MeshPhongMaterial({color: 0x888888});
+		var mur = new THREE.Mesh(wall, wallmat);*/
+		
+		do {
+			var ok = true;
+			var x = Math.floor(Math.random() * Math.floor(dimension-2)) +1;
+			var z = Math.floor(Math.random() * Math.floor(dimension-2)) +1;	
+			listemurs.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+					ok = false;
+				}
+			});
+		}
+		while(!ok);
+		
+		listemurs.push(new Point(x,z));
+		
+		objetXHRAjoutMurEnBD  = new XMLHttpRequest();
+
+		objetXHRAjoutMurEnBD.open("get","ajouterMurBD.php?x="+x+"y="+z+"idMap="+idMap,false);
+
+		objetXHRAjoutMurEnBD.send(null);
+
+		/*mur.position.set(x,0.5,z);
+		scene.add(mur);*/
+	}
+
+	for(var i=0; i<nbflaques ; i++) {
+		/*var cylindre = new THREE.CylinderGeometry(0.5,0.5,0.001,20,32);
+		var flaquemat = new THREE.MeshPhongMaterial({color: 0x00aa00});
+		var flaque = new THREE.Mesh(cylindre, flaquemat);*/
+		
+		do {
+			var ok = true;
+			var x = Math.floor(Math.random() * Math.floor(dimension));
+			var z = Math.floor(Math.random() * Math.floor(dimension));
+			
+			listeflaques.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listemurs.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			
+		}
+		while(!ok);
+		
+		listeflaques.push(new Point(x,z));
+		
+		/*flaque.position.set(x,0,z);
+		scene.add(flaque);*/
+	}
+
+	
+
+	objetXHRAjoutPartieEnBD  = new XMLHttpRequest();
+
+	objetXHRAjoutPartieEnBD.open("get","ajouterPartieBD.php",false);
+	objetXHRAjoutPartieEnBD.send(null);
+}
+
+function init(nbF, nbM, dim) { 
 	var nbflaques = nbF;
 	var nbmurs = nbM;
 	var dimension = dim;
@@ -73,6 +153,7 @@ function init(nbF, nbM, dim) {
 	
 	// tous les murs, aleatoirement mais pas aux limites de la map
 	for(var i=0; i<nbmurs ; i++) {
+
 		var wall = new THREE.BoxGeometry(1,1,1);
 		var wallmat = new THREE.MeshPhongMaterial({color: 0x888888});
 		var mur = new THREE.Mesh(wall, wallmat);
