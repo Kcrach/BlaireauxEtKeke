@@ -45,7 +45,7 @@
 							<input type="submit" id="deconnexion" value="Déconnexion"/>
 						</form>
 						 
-						<form method="post" enctype="" action="//localhost/BlaireauxEtKeke/index.php">
+						<form method="post" enctype="" action="../fonctions/RetourAccueil.php">
 							<input type="submit" id="retour" value="Retour accueil"/>
  						</form>
 
