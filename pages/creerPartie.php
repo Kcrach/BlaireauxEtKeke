@@ -37,12 +37,16 @@
 
 							</br>
 
-							<input type="submit" value="Créer la partie"/>
+							<input type="submit" id="créerPartie" value="Créer la partie"/>
 
 						</form>
 
-						<form methos="post" enctype="" action="fonctions/deconnexion.php">
+						<form method="post" enctype="" action="../fonctions/deconnexion.php">
 							<input type="submit" id="deconnexion" value="Déconnexion"/>
+						</form>
+						 
+						<form method="post" enctype="" action="//localhost/BlaireauxEtKeke/index.php">
+							<input type="submit" id="retour" value="Retour accueil"/>
  						</form>
 
  					  </body>
