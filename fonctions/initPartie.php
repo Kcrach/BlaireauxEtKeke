@@ -22,7 +22,9 @@
 
 						<body onload="createPartie('.$nbFlaques.','.$nbMurs.','.$dimensionGrille.');"></body>
 
-						
+						<form method="post" enctype="" action="../fonctions/RetourAccueil.php"> 
+							<input type="submit" id="retour" value="Retour accueil"/>
+ 						</form>
 						
 					</html>';
 
