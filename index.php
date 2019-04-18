@@ -43,7 +43,7 @@
 
 								<th>
 										<p id="règles"> Règles du jeu </p>
-										<p>
+										<p align=left>
 
 											- Les joueurs sont répartis aléatoirement en deux équipes: les kékés en surnombre et les blaireaux moins nombreux.<br/>
 											- Les vilans blaireaux ont pour objectif de manger les gentils kékés.<br/>
