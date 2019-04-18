@@ -32,6 +32,8 @@ var rot = false;
 var moveCpt = 0;
 var rotCpt = 0; 
 
+var supervue = 0; // bool pour la super-vue
+
 function Point(x, y) {
 	this.x = x;
 	this.y = y;
@@ -158,7 +160,6 @@ function init() {
 		cam.position.x = x;
 		cam.position.z = z;
 		cam.rotation.y = THREE.Math.degToRad(90 - (90*direction));
-		cam.rotation.x = THREE.Math.degToRad(0);
 		
 		debugDir();
 		console.log("Position :"); console.log(cube.position);
@@ -313,6 +314,46 @@ function init() {
 			cam.position.z = f.y;
 		}
 	}
+
+	function bonusSupervue() {
+
+		if(supervue == 0) {
+			// active super-vue
+			supervue = 1;
+			cam.position.y = 9;
+			switch(direction) {
+				case 0:
+					cam.rotation.y -= THREE.Math.degToRad(90);
+					cam.rotation.x = THREE.Math.degToRad(-90);
+					cam.rotation.z = THREE.Math.degToRad(90);
+					break;
+				case 1:
+					cam.rotation.x = THREE.Math.degToRad(-90);
+					break;
+				case 2:
+					cam.rotation.y += THREE.Math.degToRad(90);
+					cam.rotation.x = THREE.Math.degToRad(-90);
+					cam.rotation.z = THREE.Math.degToRad(-90);
+					break;
+				case 3:
+					cam.rotation.x = THREE.Math.degToRad(90);
+					break;
+			}
+		}
+		else {
+			// annule super-vue
+			supervue = 0;
+			cam.position.y = 0.5;
+			cam.rotation.z = THREE.Math.degToRad(0);
+			cam.rotation.x = THREE.Math.degToRad(0);
+			cam.rotation.y = THREE.Math.degToRad(90 - (90*direction));
+		}
+		console.log("cam rot :");
+		console.log(THREE.Math.radToDeg(cam.rotation.x));
+		console.log(THREE.Math.radToDeg(cam.rotation.y));
+		console.log(THREE.Math.radToDeg(cam.rotation.z));
+		console.log("\n");
+	}
 	
 	// modulo fonctionnant sur les negatifs
 	function mod(n, m) {
@@ -333,32 +374,27 @@ function init() {
 		if(!moving && !rot) {
 			switch(e.code) {
 				case "ArrowUp":
-					if(!blocked) {
+					if(!blocked && supervue!=1) {
 						console.log("Nouveau déplacement");
 						console.log(cube.position);
 						move();
 					}
 					break;
-				/*case "ArrowDown":
+				case "ArrowDown":
+					bonusSupervue();
 					break;
-				*/
 				case "ArrowLeft":
-					rotDir = 0;
-					rotate();
-					break;
+					if(supervue!=1) {
+						rotDir = 0;
+						rotate();
+						break;
+					}
 				case "ArrowRight":
-					rotDir = 1;
-					rotate();
-					break;
-				case "Space":
-					console.log("Nouveau déplacement");
-					console.log(cube.position);
-					cube.position.x = 3;
-					cube.position.z = 3;
-					cam.position.x = 3;
-					cam.position.z = 3;
-					console.log(cube.position);
-					break;
+					if(supervue!=1) {
+						rotDir = 1;
+						rotate();
+						break;
+					}
 			}
 		}
 	}
