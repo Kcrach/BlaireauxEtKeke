@@ -28,7 +28,7 @@
 							</select>
 						</header>
 
-						<img src="img/badger.png" align="center"/>
+						<img src="img/badger.png"/>
 
 						<table>
 							<tr>
@@ -42,7 +42,7 @@
 								</th>
 
 								<th>
-										<p id="règles"> Règles du jeu </p>
+										<h2 id="règles"> Règles du jeu </h2>
 										<p align=left>
 
 											- Les joueurs sont répartis aléatoirement en deux équipes: les kékés en surnombre et les blaireaux moins nombreux.<br/>
@@ -62,14 +62,13 @@
 								</th>
 
 								<th id="infos">';
-										
-
-		$html2 = 				'</th>
+									$html2 = 
+								'</th>
 							</tr>
 
 						</table>
 
-						<form methos="post" enctype="" action="fonctions/deconnexion.php">
+						<form method="post" enctype="" action="fonctions/deconnexion.php">
 							<input type="submit" value="Déconnexion"/>
  						</form>
 
@@ -84,7 +83,7 @@
 		echo "Score : ";
 		echo  $user->getScore();
 		echo "<p></p>";
-		echo "Place : ";
+		echo "Classement : ";
 		echo $user->getClassement();
 		echo $html2;
 	}
