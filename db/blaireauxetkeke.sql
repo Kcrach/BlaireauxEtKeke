@@ -20,10 +20,11 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
+DROP TABLE IF EXISTS `mur`;
 DROP TABLE IF EXISTS `user-partie`;
+DROP TABLE IF EXISTS `partie`;
 DROP TABLE IF EXISTS `map`;
 DROP TABLE IF EXISTS `user`;
-DROP TABLE IF EXISTS `partie`;
 
 -- --------------------------------------------------------
 
@@ -40,6 +41,19 @@ DROP TABLE IF EXISTS `partie`;
 CREATE TABLE IF NOT EXISTS `map` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `user-partie`
+--
+
+CREATE TABLE IF NOT EXISTS `mur` (
+  `idMap` int(11) NOT NULL,
+  `posX`  int(11) NOT NULL,
+  `posY`  int(11) NOT NULL,
+  KEY `idMap` (`idMap`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -108,6 +122,10 @@ COMMIT;
 
 ALTER TABLE `partie`
   ADD CONSTRAINT `partie_ibfk_1` FOREIGN KEY (`idMap`) REFERENCES `map` (`id`);
+COMMIT;
+
+ALTER TABLE `mur`
+  ADD CONSTRAINT `mur_ibfk_1` FOREIGN KEY (`idMap`) REFERENCES `map` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

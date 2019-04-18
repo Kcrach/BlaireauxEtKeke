@@ -20,7 +20,7 @@
 							<script src="../lib/three.js"></script>
 						</head>
 
-						<body onload="init('.$nbFlaques.','.$nbMurs.','.$dimensionGrille.');"></body>
+						<body onload="createPartie('.$nbFlaques.','.$nbMurs.','.$dimensionGrille.');"></body>
 
 						
 						
