@@ -21,19 +21,19 @@
 
 						<img src="../img/badger.png" align="center"/>
 
-						<form method="post" enctype="" action="../fonctions/initPartie.php">
+						<form method="post" enctype="" action="../fonctions/initPartie.php" align=center>
 							<label for="dimensionGrille">Dimension de la grille</label></br>
-							<input type="number" id="dimensionGrille" name="dimensionGrille"/></br>
+							<input type="number" min="0" id="dimensionGrille" name="dimensionGrille"/></br>
 
 							</br>
 
 							<label for="nbFlaque">Nombre de flaque :</label></br>
-							<input type="number" id="nbFlaque" name="nbFlaque"/></br>
+							<input type="number" min="0" id="nbFlaque" name="nbFlaque"/></br>
 
 							</br>
 
 							<label for="nbMur">Nombre de mur :</label></br>
-							<input type="number" id="nbMur" name="nbMur"/></br>
+							<input type="number" min="0" id="nbMur" name="nbMur"/></br>
 
 							</br>
 
@@ -42,7 +42,7 @@
 						</form>
 
 						<form methos="post" enctype="" action="fonctions/deconnexion.php">
-							<input type="submit" value="Déconnexion"/>
+							<input type="submit" id="deconnexion" value="Déconnexion"/>
  						</form>
 
  					  </body>
