@@ -47,3 +47,23 @@ th {
 #infos{
 	width: 8%;
 }
+
+input {
+	border: none;
+	transition: 0.3s;
+}
+
+#deconnexion{
+	background-color: white;
+	margin-top: 20px;
+	width: 200px;
+	height: 35px;
+	border-radius: 5px;
+	transition: 0.15s;
+}
+
+#deconnexion:hover{
+	margin-top: 15px;
+	color: #0498A2;
+	height: 45px;
+}

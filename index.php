@@ -69,7 +69,7 @@
 						</table>
 
 						<form method="post" enctype="" action="fonctions/deconnexion.php">
-							<input type="submit" value="Déconnexion"/>
+							<input type="submit" id="deconnexion" value="Déconnexion"/>
  						</form>
 
  					  </body>
