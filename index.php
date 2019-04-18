@@ -47,10 +47,10 @@
 
 											- Les joueurs sont répartis aléatoirement en deux équipes: les kékés en surnombre et les blaireaux moins nombreux.<br/>
 											- Les vilans blaireaux ont pour objectif de manger les gentils kékés.<br/>
-											- Mais régulièrement, lorsque le gong sonne, les rôles sont inversés les gentils kékés deviennent des vilains kékés ayant pour seul objectif de dévorer les blaireaux devenus alros gentils.<br/>
+											- Mais régulièrement, lorsque le gong sonne, les rôles sont inversés les gentils kékés deviennent des vilains kékés ayant pour seul objectif de dévorer les blaireaux devenus alors gentils.<br/>
 											- La partie est limitée dans le temps. A la fin les plus nombreux ont gagnés.<br/>
 											<br/>
-											- Les avatats des joueurs apparaissent répartis aléatoirement sur le terrain.<br/>
+											- Les avatars des joueurs apparaissent répartis aléatoirement sur le terrain.<br/>
 											- Le terrain est pourvu de flaques magiques. Si un joueur tombe dans une flaque il réapparaît sur une autre flaque du terrain.<br/>
 											<br/>
 											Les super pouvoirs:<br/>
