@@ -34,7 +34,7 @@
 							<tr>
 								<th id="liens">
 										<a href="#"><p> Liens utiles </p></a>
-										<a href="#"><p> Rejoindre partie </p></a>
+										<a href="pages/recherchePartie.php"><p> Rejoindre partie </p></a>
 										<a href="pages/creerPartie.php"><p> Créer une partie </p></a>
 										<a href="#"><p> Leaderboard </p></a>
 										<a href="#"><p> F.A.Q </p></a>
