@@ -9,10 +9,9 @@
 		private $idMap;
 
 		//Constructeur
-		public function __construct($d, $idM){
+		public function __construct($idM){
 			$this->etat = 0;
-			$this->date = $d;
-			$this->idMap = $idm;
+			$this->idMap = $idM;
 		}
 
 		//Set&Get
@@ -31,10 +30,23 @@
 		//Fonctions
 		public function ajouterBD(){
 
-			$requete = "INSERT INTO Partie VALUES(NULL,".$this->etat.",'".$this->date."',".$this->idMap.");";
+			$requete = "INSERT INTO Partie VALUES(NULL,".$this->etat.",SYSDATE(),".$this->idMap.");";
 
 			global $db;
 			$db->query($requete);
+		}
+
+		public function getID(){
+			$requete = "SELECT max(id) as id FROM Partie";
+
+			global $db;
+			$res = $db->query($requete);
+
+			foreach($res as $idTmp){
+				$id = $idTmp['id'];
+			}
+
+			return intval($id);
 		}
 	}
 ?>

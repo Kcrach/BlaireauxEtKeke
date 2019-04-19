@@ -7,9 +7,9 @@
 		echo $_GET['x'];
 
 		if(isset($_GET['idMap']) && isset($_GET['y']) && isset($_GET['x'])){
-			$idMap = $_GET['idMap'];
-			$x=$_GET['x'];
-			$y=$_GET['y'];
+			$idMap = htmlspecialchars($_GET['idMap']);
+			$x= htmlspecialchars($_GET['x']);
+			$y=htmlspecialchars($_GET['y']);
 
 			$flaque = new Flaque($idMap,$x,$y);	
 			$flaque->ajouterBD();		

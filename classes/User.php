@@ -65,5 +65,18 @@
 
 			return $existe;
 		}
+
+		public function getID(){
+			$requete = "SELECT id FROM User WHERE login ='".$this->login."'";
+
+			global $db;
+			$res = $db->query($requete);
+
+			foreach($res as $idTmp){
+				$id = $idTmp['id'];
+			}
+
+			return intval($id);
+		}
 	}
 ?>

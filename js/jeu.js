@@ -50,7 +50,7 @@ function createPartie(nbF, nbM, dim){ //Quand quelqu'un crée une partie
 	
 	idMap = parseInt(objetXHRAjoutMapEnBD.responseText,10);
 
-	console.log("ID MAP:" + idMap);
+	//console.log("ID MAP:" + idMap);
 
 	for(var i=0; i<nbmurs ; i++) {
 		
@@ -117,8 +117,23 @@ function createPartie(nbF, nbM, dim){ //Quand quelqu'un crée une partie
 
 	objetXHRAjoutPartieEnBD  = new XMLHttpRequest();
 
-	objetXHRAjoutPartieEnBD.open("get","ajouterPartieBD.php",false);
+	objetXHRAjoutPartieEnBD.open("get","ajouterPartieBD.php?idMap="+idMap,false);
 	objetXHRAjoutPartieEnBD.send(null);
+
+	idPartie = parseInt(objetXHRAjoutPartieEnBD.responseText,10);
+
+	console.log("IdP ="+idPartie);
+
+	/*objetXHRAjoutUPEnBD  = new XMLHttpRequest();
+
+	objetXHRAjoutUPEnBD.open("get","ajouterUserPartieBD.php?idPartie="+idPartie+"&typeUser='host'",false);
+	objetXHRAjoutUPEnBD.send(null);
+
+	test = objetXHRAjoutUPEnBD.responseText;
+
+	//console.log("ajouterPartieBD.php?idMap="+idMap);
+	console.log("test"+test);*/
+
 }
 
 function init(nbF, nbM, dim) { 

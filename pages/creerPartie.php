@@ -1,6 +1,8 @@
 <?php
 	require_once __DIR__."/../config.php";
-	require_once SITE_ROOT."/classes/Map.php";
+	/*require_once SITE_ROOT."/classes/UserPartie.php";
+	require_once SITE_ROOT."/classes/Partie.php";
+	require_once SITE_ROOT."/classes/Map.php";*/
 
 	session_start();
 
@@ -56,6 +58,17 @@
 
 					</html>';
 		echo $html;
+
+		/*$m = new Map();
+		$m->ajouterBD();
+
+		$p = new Partie(1);
+		$p -> ajouterBD();
+
+		$idUser = $_SESSION['user']->getID();
+
+		$up = new UserPartie($idUser, 1, "host");
+		$up->ajouterBD();*/
 	}
 	else{
 		header("Location: //localhost/BlaireauxEtKeke/pages/login.php");
