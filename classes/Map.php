@@ -15,10 +15,16 @@
 		}
 
 		function getID(){
-			$requete = "SELECT count(id) FROM Map GROUP BY id";
+			$requete = "SELECT max(id) as id FROM Map";
 
 			global $db;
-			$db->query($requete);
+			$res = $db->query($requete);
+
+			foreach($res as $idTmp){
+				$id = $idTmp['id'];
+			}
+
+			return intval($id);
 		}
 	}
 ?>

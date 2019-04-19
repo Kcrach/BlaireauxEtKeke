@@ -2,7 +2,7 @@
 	require_once __DIR__."/../config.php";
 	require_once SITE_ROOT."/fonctions/connexionBD.php";
 
-	class Mur{
+	class Flaque{
 		//Attributs
 		private $idMap;
 		private $posX;
@@ -30,7 +30,7 @@
 
 		//Fonction
 		public function ajouterBD(){
-			$requete = "INSERT INTO Mur VALUES(".$this->idMap.",".$this->posX.",".$this->posY.");";
+			$requete = "INSERT INTO Flaque VALUES(".$this->idMap.",".$this->posX.",".$this->posY.");";
 
 			global $db;
 			$db->query($requete);

@@ -1,6 +1,6 @@
 <?php
 	require_once __DIR__."/../config.php";
-	require_once SITE_ROOT."/classes/Mur.php";
+	require_once SITE_ROOT."/classes/Flaque.php";
 	session_start();
 
 	if(isset($_SESSION['user'])){
@@ -11,10 +11,8 @@
 			$x=$_GET['x'];
 			$y=$_GET['y'];
 
-			$mur = new Mur($idMap,$x,$y);	
-			$mur->ajouterBD();
-
-			
+			$flaque = new Flaque($idMap,$x,$y);	
+			$flaque->ajouterBD();		
 		}
 	}
 	else{

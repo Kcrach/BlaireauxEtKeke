@@ -6,6 +6,8 @@
 	if(isset($_SESSION['user'])){
 			$map = new Map();
 			$map->ajouterBD();
+
+			echo intval($map->getID()); //On renvoie la réponse sur le flux
 	}
 	else{
 		header("Location: //localhost/BlaireauxEtKeke/pages/login.php");

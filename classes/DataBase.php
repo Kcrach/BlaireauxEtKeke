@@ -106,7 +106,6 @@
 		 * @return array|string qui contient tout les résulats de notre requête
 		*/
 		public function query($_requete){
-			echo $_requete;
 			$res= $this->pdo->query($_requete);
 			return $res;
 		}
