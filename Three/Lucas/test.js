@@ -7,10 +7,16 @@ var mapHeight = 7;
 var vitDep = 0.1;
 var vitRot = 9;
 
-var nbmurs = 6;
+var nbmurs = 5;
 var listemurs = [];
-var nbflaques = 4;
+var nbflaques = 2;
 var listeflaques = [];
+
+var nbbonusVue = 3;
+var listebonus = [];
+
+// objet tenu, 0 = pas d'objet, 1 = super-vue, ...
+var objetTenu = 0;
 
 // définit si il y a un obstacle en face du joueur ou non
 var blocked = false;
@@ -37,6 +43,12 @@ var supervue = 0; // bool pour la super-vue
 function Point(x, y) {
 	this.x = x;
 	this.y = y;
+}
+
+function Bonus(type, objet) {
+	this.type = type;
+	this.objet = objet;
+	this.anim = 0;
 }
 
 function init() {
@@ -119,10 +131,45 @@ function init() {
 		scene.add(flaque);
 	}
 	
+	// bonus super-vue
+	for(var i=0; i<nbbonusVue ; i++) {
+		var sphere = new THREE.SphereGeometry(0.05, 8,8);
+		var bonusmat = new THREE.MeshPhongMaterial({color: 0xffffff});
+		var bonus = new THREE.Mesh(sphere, bonusmat);
+		
+		do {
+			var ok = true;
+			var x = Math.floor(Math.random() * Math.floor(mapWidth));
+			var z = Math.floor(Math.random() * Math.floor(mapHeight));
+			
+			listeflaques.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listemurs.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listebonus.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			
+		}
+		while(!ok);
+
+		bonus.name = "supervue"+i;
+		bonus.position.set(x,0.3,z);
+		listebonus.push(new Bonus(1,bonus));
+		scene.add(bonus);
+	}
+
 	//ajouts et positionnements
 	scene.add(sol);
-	scene.add(mur);
-	scene.add(cube);
+	
 	scene.add(ambient);
 	scene.add(dlight);
 	
@@ -136,6 +183,7 @@ function init() {
 		
 	renderer.render(scene,cam);
 	animate();
+	animBonus();
 	
 	// position aléatoire sur le plateau
 	function randomPosition() {
@@ -152,7 +200,8 @@ function init() {
 		
 		cube.position.x = x;
 		cube.position.z = z;
-				
+		scene.add(cube);
+
 		direction = Math.floor(Math.random() * Math.floor(4));
 		
 		// réglages cam
@@ -171,7 +220,28 @@ function init() {
 		requestAnimationFrame(animate);
 		renderer.render(scene,cam);
 	}
-	
+
+	function animBonus() {
+		listebonus.forEach(function(element) {
+			if(element.type == 1) {
+				if(element.anim == 0) {
+					element.objet.position.y += 0.005;
+				}
+				else {
+					element.objet.position.y -= 0.005;
+				}
+				if(element.objet.position.y >= 0.45) {
+					element.anim = 1;
+				}
+				if(element.objet.position.y <= 0.3) {
+					element.anim = 0;
+				}
+			}
+		});
+		requestAnimationFrame(animBonus);
+		renderer.render(scene,cam);
+	}
+
 	// déplacement
 	function move() {
 		moving = true;
@@ -225,6 +295,7 @@ function init() {
 			
 			checkTeleportFlaque();
 			checkCol();
+			checkBonus()
 		}
 		else requestAnimationFrame(move);			
 	}
@@ -285,13 +356,12 @@ function init() {
 		blocked = false;
 		listemurs.forEach(function(element) {
 			if(p.x == element.x && p.z == element.y) {
-				console.log(element);
 				blocked = true;
 			}
 		});
 	}
 	
-	// vérifie si l'on marche sur un flaque, téléporte si besoin
+	// vérifie si l'on marche sur une flaque, téléporte si besoin
 	function checkTeleportFlaque() {
 		var ok = false;
 		var e;
@@ -315,44 +385,80 @@ function init() {
 		}
 	}
 
-	function bonusSupervue() {
+	// vérifie si l'on marche sur un objet, l'ajoute si oui
+	function checkBonus() {
+		var ok = false;
+		var e;
+		listebonus.forEach(function(element) {
+			if(cube.position.x == element.objet.position.x && cube.position.z == element.objet.position.z) {
+				ok = true;
+				e = element;
+			}
+		});
+		if(ok) {
+			// ramasse objet, supprime de la map
+			objetTenu = e.type;
+			scene.remove(e.objet);
 
-		if(supervue == 0) {
-			// active super-vue
-			supervue = 1;
-			cam.position.y = 9;
-			switch(direction) {
-				case 0:
-					cam.rotation.y -= THREE.Math.degToRad(90);
-					cam.rotation.x = THREE.Math.degToRad(-90);
-					cam.rotation.z = THREE.Math.degToRad(90);
-					break;
+			for(var i = 0; i < listebonus.length; i++){ 
+				if(listebonus[i].objet.name == e.objet.name) {
+			    	listebonus.splice(i, 1); 
+			   	}
+			}
+			switch(e.type) {
 				case 1:
-					cam.rotation.x = THREE.Math.degToRad(-90);
+					nbbonusVue -= 1;
 					break;
 				case 2:
-					cam.rotation.y += THREE.Math.degToRad(90);
-					cam.rotation.x = THREE.Math.degToRad(-90);
-					cam.rotation.z = THREE.Math.degToRad(-90);
-					break;
-				case 3:
-					cam.rotation.x = THREE.Math.degToRad(90);
+					// decrementer autre compteur
 					break;
 			}
 		}
-		else {
-			// annule super-vue
-			supervue = 0;
-			cam.position.y = 0.5;
-			cam.rotation.z = THREE.Math.degToRad(0);
-			cam.rotation.x = THREE.Math.degToRad(0);
-			cam.rotation.y = THREE.Math.degToRad(90 - (90*direction));
+	}
+
+	function utiliserBonus() {
+		//action super-vue
+		if(objetTenu == 1) {
+			if(supervue == 0) {
+				// active super-vue
+				supervue = 1;
+				cam.position.y = 9;
+				switch(direction) {
+					case 0:
+						cam.rotation.y -= THREE.Math.degToRad(90);
+						cam.rotation.x = THREE.Math.degToRad(-90);
+						cam.rotation.z = THREE.Math.degToRad(90);
+						break;
+					case 1:
+						cam.rotation.x = THREE.Math.degToRad(-90);
+						break;
+					case 2:
+						cam.rotation.y += THREE.Math.degToRad(90);
+						cam.rotation.x = THREE.Math.degToRad(-90);
+						cam.rotation.z = THREE.Math.degToRad(-90);
+						break;
+					case 3:
+						cam.rotation.x = THREE.Math.degToRad(90);
+						break;
+				}
+			}
+			else {
+				// annule super-vue
+				supervue = 0;
+				cam.position.y = 0.5;
+				cam.rotation.z = THREE.Math.degToRad(0);
+				cam.rotation.x = THREE.Math.degToRad(0);
+				cam.rotation.y = THREE.Math.degToRad(90 - (90*direction));
+				objetTenu = 0;
+			}
 		}
-		console.log("cam rot :");
-		console.log(THREE.Math.radToDeg(cam.rotation.x));
-		console.log(THREE.Math.radToDeg(cam.rotation.y));
-		console.log(THREE.Math.radToDeg(cam.rotation.z));
-		console.log("\n");
+
+		// action autre objet
+		if(objetTenu == 2) {
+			
+
+		}
+		
 	}
 	
 	// modulo fonctionnant sur les negatifs
@@ -381,7 +487,7 @@ function init() {
 					}
 					break;
 				case "ArrowDown":
-					bonusSupervue();
+					utiliserBonus();
 					break;
 				case "ArrowLeft":
 					if(supervue!=1) {
