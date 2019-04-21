@@ -35,7 +35,7 @@
 						<form>
 							<div id="loader"></div> <br>
 							<div><p id="message">En attente de joueurs...</p></div>
-							<progress value="0" max="10" id="progressBar" hidden></progress>
+							<progress value="0" max="5" id="progressBar" hidden></progress>
 						</form>
 					</fieldset>
 				</th>

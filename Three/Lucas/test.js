@@ -521,3 +521,25 @@ function init() {
 	}
 
 }
+
+//Compte à Rebours
+	var temps = 30;
+	var intervalId = null;
+	function compteArebours(){
+		intervalId = setInterval(bip, 1000);
+	}	
+	function bip() {
+		temps--;
+		if(temps == 0){
+			gong();
+			temps=30;
+			compteArebours();
+		}
+		else {	
+			document.getElementById("chronoSecondes").innerHTML = temps;
+		}	
+	}	
+	function gong(){
+		clearInterval(intervalId);
+		document.getElementById("chronoSecondes").innerHTML = "GONG!";
+	}

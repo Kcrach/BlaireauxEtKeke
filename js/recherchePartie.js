@@ -7,13 +7,15 @@ function trouve(){
 	document.getElementById('h1-01').innerHTML="Recherche terminée";
 	document.getElementById('message').innerHTML="La partie va débuter <br><br>";
 	document.getElementById("progressBar").hidden = false;
-	var timeleft = 10;
+	var timeleft = 5;
 	var downloadTimer = setInterval(function(){
-	document.getElementById("progressBar").value = 11 - timeleft;
-	timeleft -= 1;
-	if(timeleft <= 0)
-		clearInterval(downloadTimer);
-	}, 1000);
+		document.getElementById("progressBar").value = 6 - timeleft;
+		timeleft -= 1;
+		if(timeleft <= 0)
+			clearInterval(downloadTimer);
+		if(document.getElementById("progressBar").value == 5)
+			document.location.href="../Three/Lucas/test.html";// juste pour y acceder, au final emmenera vers une vraie partie
+		}, 1000);
 	
 }
 

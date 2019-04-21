@@ -8,12 +8,18 @@
      
 	 <body onload="init()">
 	 
+		<div id="chrono">
+			<strong>Temps restant avant le Gong</strong> :
+			<span id="chronoSecondes" ></span> secondes
+		</div>
+
 		<div>
 			Avancer : [↑]<br/>
 			Rotation :  [←]  [→] <br/>
 			Super-vue : [🠣]<br/>
 			Infos dans la console
 		</div>
+	<input type="button" onclick="compteArebours();" value="test chrono">
 		
     </body>
     <script src="../lib/three.js"></script>
