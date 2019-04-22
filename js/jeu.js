@@ -122,17 +122,17 @@ function createPartie(nbF, nbM, dim){ //Quand quelqu'un crée une partie
 
 	idPartie = parseInt(objetXHRAjoutPartieEnBD.responseText,10);
 
-	console.log("IdP ="+idPartie);
+	//console.log("IdP ="+idPartie);
 
-	/*objetXHRAjoutUPEnBD  = new XMLHttpRequest();
+	objetXHRAjoutUPEnBD  = new XMLHttpRequest();
 
-	objetXHRAjoutUPEnBD.open("get","ajouterUserPartieBD.php?idPartie="+idPartie+"&typeUser='host'",false);
+	objetXHRAjoutUPEnBD.open("get","ajouterUserPartieBD.php?idPartie="+idPartie+"&typeUser=host",false);
 	objetXHRAjoutUPEnBD.send(null);
 
-	test = objetXHRAjoutUPEnBD.responseText;
+	//test = objetXHRAjoutUPEnBD.responseText;
 
 	//console.log("ajouterPartieBD.php?idMap="+idMap);
-	console.log("test"+test);*/
+	//console.log("test"+test);
 
 }
 

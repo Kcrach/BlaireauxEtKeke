@@ -1,4 +1,6 @@
 <?php
+	require_once __DIR__."/../config.php";
+	require_once SITE_ROOT."/fonctions/connexionBD.php";
 	require_once SITE_ROOT."/classes/User.php";
 
 	class UserPartie{

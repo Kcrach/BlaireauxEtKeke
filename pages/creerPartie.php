@@ -2,7 +2,8 @@
 	require_once __DIR__."/../config.php";
 	/*require_once SITE_ROOT."/classes/UserPartie.php";
 	require_once SITE_ROOT."/classes/Partie.php";
-	require_once SITE_ROOT."/classes/Map.php";*/
+	require_once SITE_ROOT."/classes/Map.php";
+	require_once SITE_ROOT."/classes/User.php";*/
 
 	session_start();
 

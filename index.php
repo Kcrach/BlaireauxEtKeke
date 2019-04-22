@@ -76,6 +76,8 @@
 
 					</html>';
 
+		var_dump($_SESSION);
+
 		echo $html1;
 		$user = $_SESSION['user'];
 		$login = $user->getLogin();

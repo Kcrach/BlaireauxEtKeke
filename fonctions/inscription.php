@@ -22,6 +22,11 @@
 			if($userExistant == false){
 				$userAAjouter = new User($login,$mdp);
 				$userAAjouter->ajouterBD();
+				session_start();
+
+				$_SESSION['user']=$userAAjouter;
+
+				header("Location: //localhost/BlaireauxEtKeke/index.php");			
 			}
 			else{
 				header("Location: //localhost/BlaireauxEtKeke/pages/login.php?&pb=loginExistant"	);

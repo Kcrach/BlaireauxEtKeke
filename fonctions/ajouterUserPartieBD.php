@@ -1,4 +1,5 @@
 <?php
+	require_once __DIR__."/../config.php";
 	require_once SITE_ROOT."/classes/UserPartie.php";
 
 	session_start();
@@ -11,8 +12,6 @@
 
 			$up = new UserPartie($idUser, $idPartie, $typeUser);
 			$up->ajouterBD();
-
-			echo $typeUser;
 		}
 	}
 	else{

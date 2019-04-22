@@ -12,7 +12,7 @@
 			$partie = new Partie($idMap);
 			$partie->ajouterBD();
 
-			echo $partie->getID();
+			echo intval($partie->getID());
 		}
 	}
 	else{
