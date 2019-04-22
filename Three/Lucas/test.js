@@ -520,11 +520,18 @@ function init() {
 		}
 	}
 
-}
+
 
 //Compte à Rebours
-	var temps = 30;
+	compteArebours();
+
+	var dureeGong = 5; // à ajuster
+	var temps = dureeGong;
 	var intervalId = null;
+
+	var equipe = 0;
+	document.getElementById("spanEquipe").innerHTML = "TEAM BLAIREAUX";
+
 	function compteArebours(){
 		intervalId = setInterval(bip, 1000);
 	}	
@@ -532,8 +539,7 @@ function init() {
 		temps--;
 		if(temps == 0){
 			gong();
-			temps=30;
-			compteArebours();
+			temps = dureeGong;
 		}
 		else {	
 			document.getElementById("chronoSecondes").innerHTML = temps;
@@ -542,4 +548,15 @@ function init() {
 	function gong(){
 		clearInterval(intervalId);
 		document.getElementById("chronoSecondes").innerHTML = "GONG!";
+		if(equipe == 0) {
+			equipe = 1;
+			document.getElementById("spanEquipe").innerHTML = "TEAM KEKE";
+			cube.material.color.setHex(0xaaaa00);		
+		}
+		else {
+			equipe = 0;
+			document.getElementById("spanEquipe").innerHTML = "TEAM BLAIREAUX";
+			cube.material.color.setHex(0xaa0000);	
+		}
 	}
+}
