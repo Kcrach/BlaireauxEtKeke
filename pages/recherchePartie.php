@@ -18,12 +18,6 @@
 
 			<header>
 				<h1 id="titre">BLAIREAUX vs KÉKÉS</h1>
-				<span>Theme : </span>
-				<select id="themes" onchange="switchTheme(this.selectedIndex)">
-					<option selected="selected">Défaut</option>
-					<option>Royal</option>
-					<option>Hiver</option>
-				</select>
 			</header>
 
 			<img src="../img/badger.png"/>
