@@ -14,7 +14,7 @@
 						<head>
 							<meta charset="utf-8">
 							<title>Connexion</title>
-							<link rel="stylesheet" href="../styles/accueil.css" name="theme" id="theme">
+							<link rel="stylesheet" href="../styles/creerPartie.css" name="theme" id="theme">
 							<link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet">
 							<!--<script src="../js/login.js"></script>-->
 						</head>
@@ -47,13 +47,13 @@
 
 						</form>
 
+						<form method="post" enctype="" action="../fonctions/RetourAccueil.php">
+							<input type="submit" id="retour" value="Retour accueil"/>
+						</form>
+						 
 						<form method="post" enctype="" action="../fonctions/deconnexion.php">
 							<input type="submit" id="deconnexion" value="Déconnexion"/>
 						</form>
-						 
-						<form method="post" enctype="" action="../fonctions/RetourAccueil.php">
-							<input type="submit" id="retour" value="Retour accueil"/>
- 						</form>
 
  					  </body>
 

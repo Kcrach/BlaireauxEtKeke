@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Test three.js</title>
+		<title>Blaireaux vs Kékés : le jeu</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-        <link rel="stylesheet" type="text/css" href="styles.css">
+        <link rel="stylesheet" type="text/css" href="../../styles/Jeu.css">
     </head>
      
 	<body onload="init()">
 
 		<div>
+			<h2>COMMANDES</h2>
 			Avancer : [↑]<br/>
 			Rotation :  [←]  [→] <br/>
 			Super-vue : [🠣]<br/>
-			Infos dans la console
 		</div>
 		<br/>
 		<div id="chrono">
@@ -20,8 +20,13 @@
 			<span id="chronoSecondes" ></span><br/>
 			<span id="spanEquipe"></span><br/>
 		</div>
-		
+
+		<form method="post" enctype="" action="../../fonctions/RetourAccueil.php">
+			<input type="submit" id="retour" value="Quitter la partie"/>
+		</form>
+
+		<script src="../lib/three.js"></script>
+		<script src="test.js"></script>
     </body>
-    <script src="../lib/three.js"></script>
-	<script src="test.js"></script>
+    
 </html>

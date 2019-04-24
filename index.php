@@ -33,11 +33,17 @@
 						<table>
 							<tr>
 								<th id="liens">
-										<a href="#"><p> Liens utiles </p></a>
-										<a href="pages/recherchePartie.php"><p> Rejoindre partie </p></a>
-										<a href="pages/creerPartie.php"><p> Créer une partie </p></a>
-										<a href="#"><p> Leaderboard </p></a>
-										<a href="#"><p> F.A.Q </p></a>
+									<form method="post" action="pages/creerPartie.php">
+										<input type="submit" id="CréerPartie" value="Créer une partie"/>
+									</form>
+									
+									<form method="post" action="pages/recherchePartie.php">
+										<input type="submit" id="RechPartie" value="Rejoindre partie"/>
+									</form>
+								
+									<a href="#"><p> Liens utiles </p></a>
+									<a href="#"><p> Leaderboard </p></a>
+									<a href="#"><p> F.A.Q </p></a>
 
 								</th>
 
@@ -46,7 +52,7 @@
 										<p align=left>
 
 											- Les joueurs sont répartis aléatoirement en deux équipes: les kékés en surnombre et les blaireaux moins nombreux.<br/>
-											- Les vilans blaireaux ont pour objectif de manger les gentils kékés.<br/>
+											- Les vilains blaireaux ont pour objectif de manger les gentils kékés.<br/>
 											- Mais régulièrement, lorsque le gong sonne, les rôles sont inversés les gentils kékés deviennent des vilains kékés ayant pour seul objectif de dévorer les blaireaux devenus alors gentils.<br/>
 											- La partie est limitée dans le temps. A la fin les plus nombreux ont gagnés.<br/>
 											<br/>
@@ -76,7 +82,6 @@
 
 					</html>';
 
-		var_dump($_SESSION);
 
 		echo $html1;
 		$user = $_SESSION['user'];
