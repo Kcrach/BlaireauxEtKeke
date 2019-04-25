@@ -240,6 +240,20 @@ function init() {
 		});
 		requestAnimationFrame(animBonus);
 		renderer.render(scene,cam);
+		switch(objetTenu){
+			case 0 :
+				document.getElementById("nbBonus").innerHTML = "Rien";
+				break;
+			case 1 :
+				document.getElementById("nbBonus").innerHTML = "Super-Vue";
+				break;
+			case 2 :
+				document.getElementById("nbBonus").innerHTML = "A definir";
+				break;
+			default :
+				document.getElementById("nbBonus").innerHTML = "Objet inconnu";
+				break;
+		}
 	}
 
 	// déplacement
@@ -414,6 +428,7 @@ function init() {
 					break;
 			}
 		}
+		
 	}
 
 	function utiliserBonus() {
@@ -458,6 +473,7 @@ function init() {
 			
 
 		}
+
 		
 	}
 	
@@ -531,6 +547,8 @@ function init() {
 
 	var equipe = 0;
 	document.getElementById("spanEquipe").innerHTML = "TEAM BLAIREAUX";
+
+	
 
 	function compteArebours(){
 		intervalId = setInterval(bip, 1000);
