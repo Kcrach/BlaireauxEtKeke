@@ -20,11 +20,30 @@
 							<script src="../lib/three.js"></script>
 						</head>
 
-						<body onload="createPartie('.$nbFlaques.','.$nbMurs.','.$dimensionGrille.');"></body>
+						<body onload="createPartie('.$nbFlaques.','.$nbMurs.','.$dimensionGrille.');">
 
-						<form method="post" enctype="" action="../fonctions/RetourAccueil.php"> 
-							<input type="submit" id="retour" value="Retour accueil"/>
- 						</form>
+						<div>
+							<h2>COMMANDES</h2>
+							Avancer : [↑]<br/>
+							Rotation :  [←]  [→] <br/>
+							Super-vue : [🠣]<br/>
+						</div>
+						<br/>
+						<div id="chrono">
+							<strong>Temps restant avant le Gong</strong> :
+							<span id="chronoSecondes" ></span><br/>
+							<span id="spanEquipe"></span><br/>
+						</div>
+						<div id="bonus">
+							<strong>Bonus dans l inventaire </strong> :
+							<span id="nbBonus" ></span><br/>
+						</div>
+
+						<form method="post" enctype="" action="RetourAccueil.php">
+							<input type="submit" id="retour" value="Quitter la partie"/>
+						</form>
+ 						<script src="../lib/three.js"></script>
+ 						</body>
 						
 					</html>';
 
