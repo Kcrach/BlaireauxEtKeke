@@ -53,7 +53,7 @@ body {
 	padding: 0%;
 }
 
-header {
+#header {
 	background-image:linear-gradient(to top, #172935, #0498A2 80%);
 }
 

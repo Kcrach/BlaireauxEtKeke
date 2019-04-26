@@ -18,7 +18,7 @@
 
 					<body>
 
-						<header>
+						<header id="header">
 							<h1 id="titre">BLAIREAUX vs KÉKÉS</h1>
 							<span>Theme : </span>
 							<select id="themes" onchange="switchTheme(this.selectedIndex)">
@@ -30,7 +30,7 @@
 
 						<img src="img/badger.png"/>
 
-						<table>
+						<table id="table">
 							<tr>
 								<th id="liens">
 									<form method="post" action="pages/creerPartie.php">
@@ -81,6 +81,7 @@
  					  </body>
 
 					</html>';
+					$html2.="<script src='js/themes.js'></script></html>";
 
 
 		echo $html1;

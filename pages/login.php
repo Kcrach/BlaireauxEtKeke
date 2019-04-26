@@ -15,7 +15,7 @@ $html = '<!DOCTYPE html>
 	
 	<body>
 
-		<header>
+		<header id="header">
 			<h1 id="titre">BLAIREAUX vs KÉKÉS</h1>
 			<span>Theme : </span>
 			<select id="themes" onchange="switchTheme(this.selectedIndex)">
@@ -27,7 +27,7 @@ $html = '<!DOCTYPE html>
 
 		<img src="../img/badger.png" align="center"/>
 	
-		<table>
+		<table id="table">
 			<th>
 				<fieldset>
 					<legend><h1>Se connecter</h1></legend>
@@ -114,6 +114,7 @@ $html = '<!DOCTYPE html>
 	}
 
 	$html.="<script src='../js/popup.js'></script></html>";
+	$html.="<script src='../js/themes.js'></script></html>";
 
 	echo $html;
 ?>

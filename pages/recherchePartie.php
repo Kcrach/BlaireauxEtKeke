@@ -16,13 +16,19 @@
 
 		<body>
 
-			<header>
+			<header id="header">
 				<h1 id="titre">BLAIREAUX vs KÉKÉS</h1>
+				<span>Theme : </span>
+				<select id="themes" onchange="switchTheme(this.selectedIndex)">
+					<option selected="selected">Défaut</option>
+					<option>Royal</option>
+					<option>Hiver</option>
+				</select>
 			</header>
 
 			<img src="../img/badger.png"/>
 			
-			<table>
+			<table id="table">
 				<th>
 					<fieldset>
 						<legend><h1 id="h1-01">Recherche d\'une partie en cours</h1></legend>
@@ -44,6 +50,7 @@
 		</body>
 			
 		</html>';
+		$html.="<script src='../js/themes.js'></script></html>";
 		echo $html;
 	}
 	else{

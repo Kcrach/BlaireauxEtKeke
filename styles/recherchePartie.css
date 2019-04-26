@@ -97,3 +97,10 @@ input {
 	color: #0498A2;
 	height: 45px;
 }
+
+select{
+	background-color: white;
+	width: 100px;
+	height: 30px;
+	border-radius: 5px;
+}
