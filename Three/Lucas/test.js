@@ -13,6 +13,7 @@ var nbflaques = 2;
 var listeflaques = [];
 
 var nbbonusVue = 3;
+var nbbonusBottes = 3;
 var listebonus = [];
 
 // objet tenu, 0 = pas d'objet, 1 = super-vue, ...
@@ -39,6 +40,10 @@ var moveCpt = 0;
 var rotCpt = 0; 
 
 var supervue = 0; // bool pour la super-vue
+var bottesActives = 0; // bool super vitesse
+var boostBottes = null; // compte à rebour vitesse
+var dureeBottes = 6;
+var tempsActuelBottes = 6;
 
 function Point(x, y) {
 	this.x = x;
@@ -73,15 +78,15 @@ function init() {
 	
 	// sol
 	var plan = new THREE.BoxGeometry(mapWidth,1,mapHeight);
-	var solmat = new THREE.MeshPhongMaterial({color: 0x0000aa});
+	var solmat = new THREE.MeshPhongMaterial({color: 0x000080});
 	var sol = new THREE.Mesh(plan, solmat);
-	
+
 	// tous les murs, aleatoirement mais pas aux limites de la map
 	for(var i=0; i<nbmurs ; i++) {
 		var wall = new THREE.BoxGeometry(1,1,1);
-		var wallmat = new THREE.MeshPhongMaterial({color: 0x888888});
+		var wallmat = new THREE.MeshPhongMaterial({ color:0x808080 });
 		var mur = new THREE.Mesh(wall, wallmat);
-		
+
 		do {
 			var ok = true;
 			var x = Math.floor(Math.random() * Math.floor(mapWidth-2)) +1;
@@ -102,8 +107,8 @@ function init() {
 	
 	// flaques magiques
 	for(var i=0; i<nbflaques ; i++) {
-		var cylindre = new THREE.CylinderGeometry(0.5,0.5,0.001,20,32);
-		var flaquemat = new THREE.MeshPhongMaterial({color: 0x00aa00});
+		var cylindre = new THREE.CylinderGeometry(0.5,0.5,0.001,64);
+		var flaquemat = new THREE.MeshPhongMaterial({color: 0x800080});
 		var flaque = new THREE.Mesh(cylindre, flaquemat);
 		
 		do {
@@ -125,6 +130,10 @@ function init() {
 		}
 		while(!ok);
 		
+		var light = new THREE.PointLight( 0x800080, 1,2);
+		light.position.set(x,0.1,z);
+		scene.add(light);
+
 		listeflaques.push(new Point(x,z));
 		
 		flaque.position.set(x,0,z);
@@ -133,10 +142,32 @@ function init() {
 	
 	// bonus super-vue
 	for(var i=0; i<nbbonusVue ; i++) {
-		var sphere = new THREE.SphereGeometry(0.05, 8,8);
-		var bonusmat = new THREE.MeshPhongMaterial({color: 0xffffff});
-		var bonus = new THREE.Mesh(sphere, bonusmat);
-		
+		var sphere1 = new THREE.SphereGeometry(0.05, 16,16);
+		var sphere2 = new THREE.SphereGeometry(0.035, 16,16);
+		var sphere3 = new THREE.SphereGeometry(0.02, 16,16);	
+
+		var sphere1mat = new THREE.MeshPhongMaterial({color: 0xffffff});
+		var sphere2mat = new THREE.MeshPhongMaterial({color: 0x00ff7f});
+		var sphere3mat = new THREE.MeshPhongMaterial({color: 0x000000});
+
+		var mesh1 = new THREE.Mesh(sphere1,sphere1mat);
+		mesh1.position.y = 0.2;
+		var mesh2 = new THREE.Mesh(sphere2,sphere2mat);
+		mesh2.position.y = 0.2;
+		mesh2.position.x = 0.023;
+		var mesh3 = new THREE.Mesh(sphere3,sphere3mat);
+		mesh3.position.y = 0.2;
+		mesh3.position.x = 0.043;
+
+		var light = new THREE.PointLight( 0x00ff7f, 1,1);
+		light.position.y = 0.2;
+
+		var oeil = new THREE.Group();
+		oeil.add(mesh1);
+		oeil.add(mesh2);
+		oeil.add(mesh3);
+		oeil.add(light);
+
 		do {
 			var ok = true;
 			var x = Math.floor(Math.random() * Math.floor(mapWidth));
@@ -153,7 +184,7 @@ function init() {
 				}
 			});
 			listebonus.forEach(function(element) {
-				if(x == element.x && z == element.y) {
+				if(x == element.objet.position.x && z == element.objet.position.z){
 						ok = false;
 				}
 			});
@@ -161,10 +192,147 @@ function init() {
 		}
 		while(!ok);
 
-		bonus.name = "supervue"+i;
-		bonus.position.set(x,0.3,z);
-		listebonus.push(new Bonus(1,bonus));
-		scene.add(bonus);
+		oeil.name = "supervue"+i;
+		oeil.position.set(x,0,z);
+		listebonus.push(new Bonus(1,oeil));
+		scene.add(oeil);
+	}
+
+	// bonus bottes
+	for(var i=0; i<nbbonusBottes ; i++) {
+		var cylindre1 = new THREE.CylinderGeometry(0.05,0.05,0.2,32);
+		var sphere = new THREE.SphereGeometry(0.05,16,16);
+		var cylindre2 = new THREE.CylinderGeometry(0.05,0.05,0.1,32);
+
+		var torus = new THREE.TorusGeometry(0.02, 0.006, 16, 100 );
+
+		var circle1 = new THREE.CircleGeometry(0.03,16,0,7);
+		var circle2 = new THREE.CircleGeometry(0.07,3,0,0.4);
+		var circle3 = new THREE.CircleGeometry(0.06,3,0,0.3);
+		var circle4 = new THREE.CircleGeometry(0.05,3,0,0.2);
+
+		var mat1 = new THREE.MeshPhongMaterial({color: 0x371B07});
+		var mat2 = new THREE.MeshPhongMaterial({color: 0xffffff, side: THREE.DoubleSide});
+		var mat3 = new THREE.MeshPhongMaterial({color: 0xffff00});
+
+		var mesh1 = new THREE.Mesh(cylindre1,mat1);
+		mesh1.position.y = 0.4;
+		var mesh2 = new THREE.Mesh(sphere,mat1);
+		mesh2.position.y = 0.3;
+		var mesh3 = new THREE.Mesh(cylindre2,mat1);
+		mesh3.position.y = 0.3;
+		mesh3.position.z = 0.05;
+		mesh3.rotation.x = THREE.Math.degToRad(90);
+		var mesh4 = new THREE.Mesh(sphere,mat1);
+		mesh4.position.y = 0.3;
+		mesh4.position.z = 0.1;
+
+		var mesh5 = new THREE.Mesh(circle1, mat2);
+		mesh5.rotation.y = THREE.Math.degToRad(90);
+		mesh5.position.y = 0.3;
+		mesh5.position.x = 0.05;
+		var mesh6 = new THREE.Mesh(circle2, mat2);
+		mesh6.rotation.y = THREE.Math.degToRad(90);
+		mesh6.rotation.x = THREE.Math.degToRad(13);
+		mesh6.position.z = 0.01;
+		mesh6.position.y = 0.325;
+		mesh6.position.x = 0.05;
+		var mesh7 = new THREE.Mesh(circle3, mat2);
+		mesh7.rotation.y = THREE.Math.degToRad(90);
+		mesh7.rotation.x = THREE.Math.degToRad(-3);
+		mesh6.position.z = 0.005;
+		mesh7.position.y = 0.31;
+		mesh7.position.x = 0.05;
+		var mesh8 = new THREE.Mesh(circle4, mat2);
+		mesh8.rotation.y = THREE.Math.degToRad(90);
+		mesh8.rotation.x = THREE.Math.degToRad(-19);
+		mesh8.position.y = 0.3;
+		mesh8.position.x = 0.05;
+
+		var mesh12 = new THREE.Mesh(circle1, mat2);
+		mesh12.rotation.y = THREE.Math.degToRad(90);
+		mesh12.position.y = 0.3;
+		mesh12.position.x = -0.05;
+		var mesh13 = new THREE.Mesh(circle2, mat2);
+		mesh13.rotation.y = THREE.Math.degToRad(90);
+		mesh13.rotation.x = THREE.Math.degToRad(13);
+		mesh13.position.z = 0.01;
+		mesh13.position.y = 0.325;
+		mesh13.position.x = -0.05;
+		var mesh14 = new THREE.Mesh(circle3, mat2);
+		mesh14.rotation.y = THREE.Math.degToRad(90);
+		mesh14.rotation.x = THREE.Math.degToRad(-3);
+		mesh14.position.z = 0.005;
+		mesh14.position.y = 0.31;
+		mesh14.position.x = -0.05;
+		var mesh15 = new THREE.Mesh(circle4, mat2);
+		mesh15.rotation.y = THREE.Math.degToRad(90);
+		mesh15.rotation.x = THREE.Math.degToRad(-19);
+		mesh15.position.y = 0.3;
+		mesh15.position.x = -0.05;
+
+		var mesh9 = new THREE.Mesh(torus, mat3);
+		mesh9.position.y = 0.44;
+		mesh9.position.z = 0.03;
+		mesh9.rotation.x = THREE.Math.degToRad(90);
+		var mesh10 = new THREE.Mesh(torus, mat3);
+		mesh10.position.y = 0.41;
+		mesh10.position.z = 0.03;
+		mesh10.rotation.x = THREE.Math.degToRad(90);
+		var mesh11 = new THREE.Mesh(torus, mat3);
+		mesh11.position.y = 0.38;
+		mesh11.position.z = 0.03;
+		mesh11.rotation.x = THREE.Math.degToRad(90);
+
+		var light = new THREE.PointLight( 0xffffff, 1,1);
+		light.position.y = 0.4;
+
+		var botte = new THREE.Group();
+		botte.add(mesh1);
+		botte.add(mesh2);
+		botte.add(mesh3);
+		botte.add(mesh4);
+		botte.add(mesh5);
+		botte.add(mesh6);
+		botte.add(mesh7);
+		botte.add(mesh8);
+		botte.add(mesh9);
+		botte.add(mesh10);
+		botte.add(mesh11);
+		botte.add(mesh12);
+		botte.add(mesh13);
+		botte.add(mesh14);
+		botte.add(mesh15);
+		botte.add(light);
+
+		do {
+			var ok = true;
+			var x = Math.floor(Math.random() * Math.floor(mapWidth));
+			var z = Math.floor(Math.random() * Math.floor(mapHeight));
+			
+			listeflaques.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listemurs.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listebonus.forEach(function(element) {
+				if(x == element.objet.position.x && z == element.objet.position.z) {
+						ok = false;
+				}
+			});
+			
+		}
+		while(!ok);
+
+		botte.name = "bottes"+i;
+		botte.position.set(x,0,z);
+		listebonus.push(new Bonus(2,botte));
+		scene.add(botte);
 	}
 
 	//ajouts et positionnements
@@ -233,10 +401,27 @@ function init() {
 				if(element.objet.position.y >= 0.45) {
 					element.anim = 1;
 				}
-				if(element.objet.position.y <= 0.3) {
+				if(element.objet.position.y <= 0) {
 					element.anim = 0;
 				}
+				element.objet.rotation.y += THREE.Math.degToRad(4);
 			}
+			if(element.type == 2) {
+				if(element.anim == 0) {
+					element.objet.position.y += 0.001;
+				}
+				else {
+					element.objet.position.y -= 0.001;
+				}
+				if(element.objet.position.y >= 0.08) {
+					element.anim = 1;
+				}
+				if(element.objet.position.y <= -0.1) {
+					element.anim = 0;
+				}
+				element.objet.rotation.y += THREE.Math.degToRad(2);
+			}
+			
 		});
 		requestAnimationFrame(animBonus);
 		renderer.render(scene,cam);
@@ -248,6 +433,9 @@ function init() {
 				document.getElementById("nbBonus").innerHTML = "Super-Vue";
 				break;
 			case 2 :
+				document.getElementById("nbBonus").innerHTML = "Bottes de vitesse ("+tempsActuelBottes+" secs)";
+				break;
+			case 3 :
 				document.getElementById("nbBonus").innerHTML = "A definir";
 				break;
 			default :
@@ -424,7 +612,7 @@ function init() {
 					nbbonusVue -= 1;
 					break;
 				case 2:
-					// decrementer autre compteur
+					nbbonusBottes -= 1;
 					break;
 			}
 		}
@@ -468,13 +656,28 @@ function init() {
 			}
 		}
 
-		// action autre objet
+		// bottes de vitesse
 		if(objetTenu == 2) {
-			
+			if(bottesActives==0){
+				bottesActives = 1;
+				tempsActuelBottes = dureeBottes;
+				vitDep = 0.2;
+				boostBottes = setInterval(boostVitesse, 1000);
+			}
+		}	
+	}
 
+	function boostVitesse() {
+		tempsActuelBottes--;
+		if(tempsActuelBottes <= 0) {
+			clearInterval(boostBottes);
+			boostBottes = null;
+			vitDep = 0.1;
+			objetTenu = 0;
+			bottesActives = 0;
+			tempsActuelBottes = dureeBottes;
+			document.getElementById("nbBonus").innerHTML = "Rien";
 		}
-
-		
 	}
 	
 	// modulo fonctionnant sur les negatifs
