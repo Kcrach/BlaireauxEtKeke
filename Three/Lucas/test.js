@@ -597,7 +597,7 @@ function init() {
 				e = element;
 			}
 		});
-		if(ok) {
+		if(ok && objetTenu==0) {
 			// ramasse objet, supprime de la map
 			objetTenu = e.type;
 			scene.remove(e.objet);
