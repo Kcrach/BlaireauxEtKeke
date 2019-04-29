@@ -42,7 +42,7 @@
 									</form>
 								
 									<a href="#"><p> Liens utiles </p></a>
-									<a href="#"><p> Leaderboard </p></a>
+									<a href="pages/leaderboard.php"><p> Leaderboard </p></a>
 									<a href="#"><p> F.A.Q </p></a>
 
 								</th>

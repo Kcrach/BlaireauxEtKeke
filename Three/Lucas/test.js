@@ -436,7 +436,7 @@ function init() {
 				document.getElementById("nbBonus").innerHTML = "Bottes de vitesse ("+tempsActuelBottes+" secs)";
 				break;
 			case 3 :
-				document.getElementById("nbBonus").innerHTML = "A definir";
+				document.getElementById("nbBonus").innerHTML = "Super Vitesse";
 				break;
 			default :
 				document.getElementById("nbBonus").innerHTML = "Objet inconnu";
