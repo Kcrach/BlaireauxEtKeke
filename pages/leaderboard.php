@@ -1,7 +1,11 @@
 <?php
 	require_once __DIR__."/../config.php";
 	require_once SITE_ROOT."/fonctions/connexionBD.php";
+	require_once SITE_ROOT."/classes/User.php";
+	session_start();
 
+	if(isset($_SESSION['user'])){
+		$user = $_SESSION['user'];
 $html = '<!DOCTYPE html>
 	<html lang="fr">
 	
@@ -38,7 +42,12 @@ $html = '<!DOCTYPE html>
 		$joueur=$db->select("login as player","user",$cond);
 			$play=$joueur->fetch();
 			$nomj=$play['player'];
-		$html.='<tr><td>'.$i.'</td><td>'.$nomj.'</td></tr>';
+			if ($nomj==$user->getLogin()){
+		$html.='<tr><td>'.$i.'</td><td>'.$nomj.'</td><td>Votre place</td></tr>';
+			}
+			else{
+			$html.='<tr><td>'.$i.'</td><td>'.$nomj.'</td></tr>';
+			}
 		
 	}
 	
@@ -53,5 +62,9 @@ $html = '<!DOCTYPE html>
 
 	
 		echo $html;
+	}
+	else{
+		header("Location: //localhost/BlaireauxEtKeke/pages/login.php");
+	}
 	
 ?>
