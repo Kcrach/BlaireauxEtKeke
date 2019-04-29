@@ -93,7 +93,7 @@
 
 			//On test s'il y a une condition
 			if($_condition != ""){
-				$requete .= "WHERE ".$_condition."";
+				$requete .= " WHERE ".$_condition."";
 			}
 
 			$res= $this->pdo->query($requete);
