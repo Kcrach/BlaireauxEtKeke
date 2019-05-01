@@ -45,6 +45,10 @@ var boostBottes = null; // compte à rebour vitesse
 var dureeBottes = 6;
 var tempsActuelBottes = 6;
 
+var modespectateur = 0;
+var tabCamJoueur = [];
+var navigCam = 0;
+
 function Point(x, y) {
 	this.x = x;
 	this.y = y;
@@ -59,7 +63,9 @@ function Bonus(type, objet) {
 function init() {
 	//scene et rendu
 	var scene = new THREE.Scene();
-	var cam = new THREE.PerspectiveCamera(45,width/height, 0.1,1000);
+	var cam = new THREE.PerspectiveCamera(60,width/height, 0.1,1000);
+	tabCamJoueur.push(cam);
+	scene.fog = new THREE.Fog(0x000000,3,3.5);
 	var renderer = new THREE.WebGLRenderer();
 	renderer.setSize(width,height);
 
@@ -497,7 +503,7 @@ function init() {
 			
 			checkTeleportFlaque();
 			checkCol();
-			checkBonus()
+			checkBonus();
 		}
 		else requestAnimationFrame(move);			
 	}
@@ -625,6 +631,7 @@ function init() {
 			if(supervue == 0) {
 				// active super-vue
 				supervue = 1;
+				scene.fog = null;
 				cam.position.y = 9;
 				switch(direction) {
 					case 0:
@@ -648,6 +655,7 @@ function init() {
 			else {
 				// annule super-vue
 				supervue = 0;
+				scene.fog = new THREE.Fog(0x000000,3,3.5);
 				cam.position.y = 0.5;
 				cam.rotation.z = THREE.Math.degToRad(0);
 				cam.rotation.x = THREE.Math.degToRad(0);
@@ -696,7 +704,7 @@ function init() {
 	document.addEventListener("keydown", keyPressed);
 	function keyPressed(e){
 		// on vérifie qu'une animation ne soit pas déjà en cours
-		if(!moving && !rot) {
+		if(!moving && !rot && modespectateur==0) {
 			switch(e.code) {
 				case "ArrowUp":
 					if(!blocked && supervue!=1) {
@@ -712,18 +720,138 @@ function init() {
 					if(supervue!=1) {
 						rotDir = 0;
 						rotate();
-						break;
 					}
+					break;
 				case "ArrowRight":
 					if(supervue!=1) {
 						rotDir = 1;
 						rotate();
-						break;
 					}
+					break;
+				// TEST du mode spectateur
+				case "Space":
+					spectate();
+					break;
+			}
+		}
+		else {
+			if(modespectateur == 1) {
+				switch(e.code) {
+					case "ArrowUp":
+						if(cam.position.z >= 1)cam.position.z -= 1;
+						break;
+					case "ArrowDown":
+						if(cam.position.z < mapHeight-0.5) cam.position.z += 1;
+						break;
+					case "ArrowLeft":
+						if(cam.position.x >= 1) cam.position.x -= 1;
+						break;
+					case "ArrowRight":
+						if(cam.position.x < mapWidth-0.5) cam.position.x += 1;
+						break;
+				}	
+			}
+			if(modespectateur >= 1) {
+				switch(e.code) {
+					case "Space":
+						spectate();
+						break;
+					case "KeyQ": // A
+						if(modespectateur==2) navigCam = mod(navigCam-1,tabCamJoueur.length);
+						specJoueur(-1);
+						break;
+					case "KeyW": // Z
+						if(modespectateur==2) navigCam = mod(navigCam+1,tabCamJoueur.length);;
+						specJoueur(1);
+						break;
+				}
 			}
 		}
 	}
-	
+
+	var camStockee = null;
+	var speccam = new THREE.PerspectiveCamera(60,width/height, 0.1,1000);
+
+	// 2e camera pour simuler un autre joueur
+	var cam2 = new THREE.PerspectiveCamera(60,width/height, 0.1,1000);
+	cam2.position.set(0,0.5,0);
+	cam2.rotation.y = THREE.Math.degToRad(90 - (90*3));
+	tabCamJoueur.push(cam2);
+	scene.add(cam2);
+
+	// 3e camera pour simuler un autre joueur
+	var cam3 = new THREE.PerspectiveCamera(60,width/height, 0.1,1000);
+	cam3.position.set(0,0.5,3);
+	cam3.rotation.y = THREE.Math.degToRad(90 - (90*3));
+	tabCamJoueur.push(cam3);
+	scene.add(cam3);
+
+
+	function spectate() {
+		// mise en mode spectateur
+
+		// uniquement pour joueur ayant perdu ou exterieur à la partie
+		switch(modespectateur) {
+
+			case 0: // passage en camera libre
+				modespectateur = 1;
+				camStockee = cam;
+				cam = speccam;
+
+				cam.position.y = 9;
+				cam.position.x = roundNumber(mapWidth/2,1);
+				cam.position.z = roundNumber(mapHeight/2,1);
+				cam.rotation.z = THREE.Math.degToRad(0);
+				cam.rotation.x = THREE.Math.degToRad(0);
+				cam.rotation.y = THREE.Math.degToRad(90 - (90*direction));
+				// vue aerienne de la map
+				switch(direction) {
+					case 0:
+						cam.rotation.y -= THREE.Math.degToRad(90);
+						cam.rotation.x = THREE.Math.degToRad(-90);
+						break;
+					case 1:
+						cam.rotation.x = THREE.Math.degToRad(-90);
+
+						break;
+					case 2:
+						cam.rotation.y += THREE.Math.degToRad(90);
+						cam.rotation.x = THREE.Math.degToRad(-90);
+						break;
+					case 3:
+						cam.rotation.y -= THREE.Math.degToRad(180);
+						cam.rotation.x = THREE.Math.degToRad(-90);
+						break;
+				}
+				scene.fog = null;
+				break;
+
+			case 1: // annule mode spectateur
+				modespectateur = 0;
+				cam.rotation.z = THREE.Math.degToRad(0);
+				cam.rotation.x = THREE.Math.degToRad(0);
+				cam.rotation.y = THREE.Math.degToRad(90 - (90*direction));
+				cam = camStockee;
+				camStockee = null;	
+				cam.position.y = 0.5;
+				scene.fog = new THREE.Fog(0x000000,3,3.5);	
+				break;
+
+			case 2: // camera de joueur vers camera libre
+				modespectateur = 0;
+				cam = camStockee;
+				spectate();
+				break;
+		}
+	}
+
+	// fonction pour switch entre les joueurs en mode spectateur
+	function specJoueur() {
+		modespectateur = 2;
+		cam = tabCamJoueur[navigCam];
+		scene.fog = new THREE.Fog(0x000000,3,3.5);	
+	}
+
 	function debugDir() {
 		if(direction == 0) {
 			console.log("Direction : "+direction+" (GAUCHE)");
@@ -740,8 +868,7 @@ function init() {
 	}
 
 
-
-//Compte à Rebours
+	//Compte à Rebours
 	compteArebours();
 
 	var dureeGong = 5; // à ajuster
