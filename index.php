@@ -5,6 +5,7 @@
 	session_start();
 
 	if(isset($_SESSION['user'])){
+		
 		$html1 = '<!DOCTYPE html>
 					<html lang="fr">
 
@@ -20,15 +21,43 @@
 
 						<header id="header">
 							<h1 id="titre">BLAIREAUX vs KÉKÉS</h1>
-							<span>Theme : </span>
-							<select id="themes" onchange="switchTheme(this.selectedIndex)">
-								<option selected="selected">Défaut</option>
-								<option>Royal</option>
-								<option>Hiver</option>
-							</select>
-						</header>
+							<span>Theme : </span>';
+							if(isset($_POST['themes'])){
+			$var = $_POST['themes'];
+			if($var == "Défaut"){
+				$html1.='<select method="post" id="themes" onchange="switchTheme(this.selectedIndex)">
+				<option selected="selected">Défaut</option>
+				<option>Royal</option>
+				<option>Hiver</option>
+			</select>
+			</header>';}
+			else{
+			if($var == "Royal"){
+				$html1.='<select method="post" id="themes" onchange="switchTheme(this.selectedIndex)">
+				<option>Défaut</option>
+				<option selected="selected">Royal</option>
+				<option>Hiver</option>
+			</select>
+			</header>';}
+			else{
+				if($var == "Hiver"){
+				$html1.='<select method="post" id="themes" onchange="switchTheme(this.selectedIndex)">
+				<option >Défaut</option>
+				<option>Royal</option>
+				<option selected="selected">Hiver</option>
+			</select>
+							</header>';}}}}
 
-						<img src="img/badger.png"/>
+			else{
+			$html1.='<select method="post" id="themes" onchange="switchTheme(this.selectedIndex)">
+				<option selected="selected">Défaut</option>
+				<option>Royal</option>
+				<option>Hiver</option>
+			</select>
+			</header>';}
+
+
+					$html1.='<img src="img/badger.png"/>
 
 						<table id="table">
 							<tr>
