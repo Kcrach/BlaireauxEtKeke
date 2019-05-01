@@ -868,9 +868,12 @@ function init() {
 	}
 
 
-	//Compte à Rebours
+	
+//Compte à Rebours
+	var termine = false;
+	
 	compteArebours();
-
+	
 	var dureeGong = 5; // à ajuster
 	var temps = dureeGong;
 	var intervalId = null;
@@ -878,20 +881,22 @@ function init() {
 	var equipe = 0;
 	document.getElementById("spanEquipe").innerHTML = "TEAM BLAIREAUX";
 
-	
-
 	function compteArebours(){
 		intervalId = setInterval(bip, 1000);
 	}	
 	function bip() {
-		temps--;
-		if(temps == 0){
-			gong();
-			temps = dureeGong;
+		if(!termine){
+			temps--;
+			if(temps == 0){
+				gong();
+				temps = dureeGong;
+			}
+			else {	
+				document.getElementById("chronoSecondes").innerHTML = temps;
+			}
 		}
-		else {	
-			document.getElementById("chronoSecondes").innerHTML = temps;
-		}	
+		else
+			document.getElementById("chronoSecondes").innerHTML = "Partie terminée";
 	}	
 	function gong(){
 		clearInterval(intervalId);
@@ -906,5 +911,32 @@ function init() {
 			document.getElementById("spanEquipe").innerHTML = "TEAM BLAIREAUX";
 			cube.material.color.setHex(0xaa0000);	
 		}
+	}
+	
+//Temps limite de la partie
+	dureePartie();
+	
+	var dureeMaxPartie = 12;
+	var tempsRestant = dureeMaxPartie;
+	var decomptePartie = null;
+	
+	function dureePartie(){
+		decomptePartie = setInterval(decompte, 1000);
+	}	
+	function decompte(){
+		if(tempsRestant>0)
+			tempsRestant--;
+		if(tempsRestant == 0){
+			finPartie();
+		}
+		else {	
+			document.getElementById("tempsPartie").innerHTML = tempsRestant;
+		}	
+	}
+	function finPartie(){
+		clearInterval(decomptePartie);
+		termine = true;
+		document.getElementById("tempsPartie").innerHTML = "TERMINE";
+		//Il faudra que le jeu s'arrete et verification des conditions de victoires, là seul le gong est annulé
 	}
 }
