@@ -12,7 +12,7 @@ $html = '<!DOCTYPE html>
 		<head>
 			<meta charset="utf-8">
 			<title>Connexion</title>
-			<link rel="stylesheet" href="../styles/leaderboard.css" >
+			<link rel="stylesheet" href="../styles/login.css" >
 			<link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet"> 
 		</head>
 	
@@ -20,44 +20,15 @@ $html = '<!DOCTYPE html>
 
 		<header id="header">
 			<h1 id="titre">BLAIREAUX vs KÉKÉS</h1>
-			<span>Theme : </span>';
-			if(isset($_POST['themes'])){
-			$var = $_POST['themes'];
-			if($var == "Défaut"){
-				$html.='<select method="post" id="themes" name ="themes" onchange="switchTheme(this.selectedIndex)">
+			<span>Theme : </span>
+			<select id="themes" onchange="switchTheme(this.selectedIndex)">
 				<option selected="selected">Défaut</option>
 				<option>Royal</option>
 				<option>Hiver</option>
 			</select>
-			</header>';}
-			else{
-			if($var == "Royal"){
-				$html.='<select method="post" id="themes" name ="themes" onchange="switchTheme(this.selectedIndex)">
-				<option>Défaut</option>
-				<option selected="selected">Royal</option>
-				<option>Hiver</option>
-			</select>
-			</header>';}
-			else{
-				if($var == "Hiver"){
-				$html.='<select method="post" id="themes" name ="themes" onchange="switchTheme(this.selectedIndex)">
-				<option >Défaut</option>
-				<option>Royal</option>
-				<option selected="selected">Hiver</option>
-			</select>
-			</header>';}}}}
+		</header>
 
-			
-			else{
-			$html.='<select method="post" id="themes" name ="themes" onchange="switchTheme(this.selectedIndex)">
-				<option selected="selected">Défaut</option>
-				<option>Royal</option>
-				<option>Hiver</option>
-			</select>
-			</header>';}
-
-
-		$html.='<img src="../img/badger.png" align="center"/>';
+		<img src="../img/badger.png" align="center"/>';
 		
 	$lignes=$db->select("count(*) as nb","user","");
 	//Plutôt que de faire un foreach, on récupère le nombre de lignes de la table.
@@ -72,27 +43,23 @@ $html = '<!DOCTYPE html>
 			$play=$joueur->fetch();
 			$nomj=$play['player'];
 			if ($nomj==$user->getLogin()){
-		$html.='<tr><td>'.$i.'</td><td><a href="profil.php?profil='.$nomj.'">'.$nomj.'</a></td><td>Votre place</td></tr>';
+		$html.='<tr><td>'.$i.'</td><td>'.$nomj.'</td><td>Votre place</td></tr>';
 			}
 			else{
-			$html.='<tr><td>'.$i.'</td><td><a href="profil.php?profil=' .$nomj .'">'.$nomj.'</a></td></tr>';
+			$html.='<tr><td>'.$i.'</td><td>'.$nomj.'</td></tr>';
 			}
 		
 	}
 	
 		
-	 $html.='</table><form method="post" enctype="" action="../fonctions/RetourAccueil.php">
-			<input type="submit" id="retour" value="Retour accueil"/>
-			</form>
-						 
-			<form method="post" enctype="" action="../fonctions/deconnexion.php">
-			<input type="submit" id="deconnexion" value="Déconnexion"/>
-			</form>	';				
-
-	 $html.='</body>';
+	  $html.='</body>';
 
 	
+
+	$html.="<script src='../js/popup.js'></script></html>";
 	$html.="<script src='../js/themes.js'></script></html>";
+
+
 	
 		echo $html;
 	}

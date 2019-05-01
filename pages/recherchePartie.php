@@ -18,44 +18,15 @@
 
 			<header id="header">
 				<h1 id="titre">BLAIREAUX vs KÉKÉS</h1>
-				<span>Theme : </span>';
-	if(isset($_POST['themes'])){
-			$var = $_POST['themes'];
-			if($var == "Défaut"){
-				$html.='<select method="post" id="themes" onchange="switchTheme(this.selectedIndex)">
-				<option selected="selected">Défaut</option>
-				<option>Royal</option>
-				<option>Hiver</option>
-			</select>
-			</header>';}
-			else{
-			if($var == "Royal"){
-				$html.='<select method="post" id="themes" onchange="switchTheme(this.selectedIndex)">
-				<option>Défaut</option>
-				<option selected="selected">Royal</option>
-				<option>Hiver</option>
-			</select>
-			</header>';}
-			else{
-				if($var == "Hiver"){
-				$html.='<select method="post" id="themes" onchange="switchTheme(this.selectedIndex)">
-				<option >Défaut</option>
-				<option>Royal</option>
-				<option selected="selected">Hiver</option>
-			</select>
-			</header>';}}}}
+				<span>Theme : </span>
+				<select id="themes" onchange="switchTheme(this.selectedIndex)">
+					<option selected="selected">Défaut</option>
+					<option>Royal</option>
+					<option>Hiver</option>
+				</select>
+			</header>
 
-			
-			else{
-			$html.='<select method="post" id="themes" onchange="switchTheme(this.selectedIndex)">
-				<option selected="selected">Défaut</option>
-				<option>Royal</option>
-				<option>Hiver</option>
-			</select>
-			</header>';}
-
-
-			$html.='<img src="../img/badger.png"/>
+			<img src="../img/badger.png"/>
 			
 			<table id="table">
 				<th>
