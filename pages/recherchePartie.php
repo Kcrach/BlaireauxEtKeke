@@ -43,7 +43,7 @@
 				</th>
 				
 			</table>
-			<input type="button" id="BTtrouvée" onclick="init(1);" value="Trouvée">
+			<input type="button" id="BTtrouvée" onclick="trouve();" value="Trouvée">
 			<input type="button" id="BTechec" onclick="echec();" value="Echec">
 
 			<form method="post" enctype="" action="../fonctions/RetourAccueil.php">
