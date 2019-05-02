@@ -12,6 +12,8 @@
 				<link rel="stylesheet" href="../styles/recherchePartie.css" name="theme" id="theme">
 				<link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet"> 
 				<script src="../js/recherchePartie.js"></script>
+				<script src="../js/jeu.js"></script>
+				<script src="../lib/three.js"></script>
 			</head>
 
 		<body>
@@ -41,7 +43,7 @@
 				</th>
 				
 			</table>
-			<input type="button" id="BTtrouvée" onclick="trouve();" value="Trouvée">
+			<input type="button" id="BTtrouvée" onclick="init(1);" value="Trouvée">
 			<input type="button" id="BTechec" onclick="echec();" value="Echec">
 
 			<form method="post" enctype="" action="../fonctions/RetourAccueil.php">

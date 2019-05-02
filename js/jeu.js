@@ -1,24 +1,27 @@
 var width = 1000;
 var height = 700;
 
-var nbflaques;
-var nbmurs;
-var dimension;
-var mapWidth;
-var mapHeight;
+var mapWidth = 7;
+var mapHeight = 7;
+
 var vitDep = 0.1;
 var vitRot = 9;
 
+var nbmurs = 5;
 var listemurs = [];
+var nbflaques = 2;
 var listeflaques = [];
 
 var nbbonusVue = 3;
+var nbbonusBottes = 3;
 var listebonus = [];
-// définit si il y a un obstacle en face du joueur ou non
-var blocked = false;
 
 // objet tenu, 0 = pas d'objet, 1 = super-vue, ...
 var objetTenu = 0;
+
+// définit si il y a un obstacle en face du joueur ou non
+var blocked = false;
+
 /*
 Directions :
 	GAUCHE = 0
@@ -35,7 +38,16 @@ var rot = false;
 // compteur pour les animations
 var moveCpt = 0;
 var rotCpt = 0; 
+
 var supervue = 0; // bool pour la super-vue
+var bottesActives = 0; // bool super vitesse
+var boostBottes = null; // compte à rebour vitesse
+var dureeBottes = 6;
+var tempsActuelBottes = 6;
+
+var modespectateur = 0;
+var tabCamJoueur = [];
+var navigCam = 0;
 
 function Point(x, y) {
 	this.x = x;
@@ -48,119 +60,12 @@ function Bonus(type, objet) {
 	this.anim = 0;
 }
 
-function createPartie(nbF, nbM, dim){ //Quand quelqu'un crée une partie
-	var nbflaques = nbF;
-	var nbmurs = nbM;
-	var dimension = dim;
-	mapHeight = dim;
-	mapWidth = dim;
-
-	objetXHRAjoutMapEnBD  = new XMLHttpRequest();
-
-	objetXHRAjoutMapEnBD.open("get","ajouterMapBD.php",false);
-	objetXHRAjoutMapEnBD.send(null);
-	
-	idMap = parseInt(objetXHRAjoutMapEnBD.responseText,10);
-
-	console.log("ID MAP:" + idMap);
-
-	for(var i=0; i<nbmurs ; i++) {
-		
-		do {
-			var ok = true;
-			var x = Math.floor(Math.random() * Math.floor(dimension-2)) +1;
-			var z = Math.floor(Math.random() * Math.floor(dimension-2)) +1;	
-			listemurs.forEach(function(element) {
-				if(x == element.x && z == element.y) {
-					ok = false;
-				}
-			});
-		}
-		while(!ok);
-		
-		listemurs.push(new Point(x,z));
-		
-		objetXHRAjoutMurEnBD  = new XMLHttpRequest();
-
-		objetXHRAjoutMurEnBD.open("get","ajouterMurBD.php?x="+x+"&y="+z+"&idMap="+idMap,false);
-
-		objetXHRAjoutMurEnBD.send(null);
-
-		/*test = objetXHRAjoutMurEnBD.responseText;
-
-		console.log("Test : "+ test);*/
-	}
-
-	for(var i=0; i<nbflaques ; i++) {
-		
-		do {
-			var ok = true;
-			var x = Math.floor(Math.random() * Math.floor(dimension));
-			var z = Math.floor(Math.random() * Math.floor(dimension));
-			
-			listeflaques.forEach(function(element) {
-				if(x == element.x && z == element.y) {
-						ok = false;
-				}
-			});
-			listemurs.forEach(function(element) {
-				if(x == element.x && z == element.y) {
-						ok = false;
-				}
-			});
-			
-		}
-		while(!ok);
-		
-		listeflaques.push(new Point(x,z));
-
-		objetXHRAjoutFlaqueEnBD  = new XMLHttpRequest();
-
-		objetXHRAjoutFlaqueEnBD.open("get","ajouterFlaqueBD.php?x="+x+"&y="+z+"&idMap="+idMap,false);
-
-		objetXHRAjoutFlaqueEnBD.send(null);
-
-		/*test = objetXHRAjoutFlaqueEnBD.responseText;
-
-		console.log("Test : "+ test);*/
-	}
-
-	
-
-	objetXHRAjoutPartieEnBD  = new XMLHttpRequest();
-
-	objetXHRAjoutPartieEnBD.open("get","ajouterPartieBD.php?idMap="+idMap,false);
-	objetXHRAjoutPartieEnBD.send(null);
-
-	idPartie = parseInt(objetXHRAjoutPartieEnBD.responseText,10);
-
-	//console.log("IdP ="+idPartie);
-
-	objetXHRAjoutUPEnBD  = new XMLHttpRequest();
-
-	objetXHRAjoutUPEnBD.open("get","ajouterUserPartieBD.php?idPartie="+idPartie+"&typeUser=host",false);
-	objetXHRAjoutUPEnBD.send(null);
-
-	//test = objetXHRAjoutUPEnBD.responseText;
-
-	//console.log("ajouterPartieBD.php?idMap="+idMap);
-	//console.log("test"+test);
-	init(nbflaques, nbmurs, dimension);
-
-}
-
-function init(nbF, nbM, dim) { 
-	var nbflaques = nbF;
-	var nbmurs = nbM;
-	var dimension = dim;
-
-	console.log(nbflaques);
-	console.log(nbmurs);
-	console.log(dimension);
-
+function init(idPartie) {
 	//scene et rendu
 	var scene = new THREE.Scene();
-	var cam = new THREE.PerspectiveCamera(45,width/height, 0.1,1000);
+	var cam = new THREE.PerspectiveCamera(60,width/height, 0.1,1000);
+	tabCamJoueur.push(cam);
+	scene.fog = new THREE.Fog(0x000000,3,3.5);
 	var renderer = new THREE.WebGLRenderer();
 	renderer.setSize(width,height);
 
@@ -179,70 +84,97 @@ function init(nbF, nbM, dim) {
 	
 	// sol
 	var plan = new THREE.BoxGeometry(mapWidth,1,mapHeight);
-	var solmat = new THREE.MeshPhongMaterial({color: 0x0000aa});
+	var solmat = new THREE.MeshPhongMaterial({color: 0x000080});
 	var sol = new THREE.Mesh(plan, solmat);
+
+
+		
+	//Pour load les murs depuis l'ID de la partie
+	objetXHRLoadMur  = new XMLHttpRequest();
+
+	objetXHRLoadMur.open("get","../../fonctions/loadMurBD.php?idPartie="+idPartie,false);
+	objetXHRLoadMur.send(null);
 	
-	// tous les murs, aleatoirement mais pas aux limites de la map
-	for(var i=0; i<nbmurs ; i++) {
+	murs = objetXHRLoadMur.responseText;
+
+	//Parse le message de retour
+	var coordMur = murs.split(' ');
+
+	
+	for(i =0; i < coordMur.length-1; i++){
+		var coordX = parseInt(coordMur[i].split(',')[0],10);
+		var coordZ = parseInt(coordMur[i].split(',')[1],10);
+
 		var wall = new THREE.BoxGeometry(1,1,1);
 		var wallmat = new THREE.MeshPhongMaterial({color: 0x888888});
 		var mur = new THREE.Mesh(wall, wallmat);
-		
-		do {
-			var ok = true;
-			var x = Math.floor(Math.random() * Math.floor(mapWidth-2)) +1;
-			var z = Math.floor(Math.random() * Math.floor(mapHeight-2)) +1;	
-			listemurs.forEach(function(element) {
-				if(x == element.x && z == element.y) {
-					ok = false;
-				}
-			});
-		}
-		while(!ok);
-		
-		listemurs.push(new Point(x,z));
-		
-		mur.position.set(x,0.5,z);
+
+		listemurs.push(new Point(coordX,coordZ));
+		/*for(i = 0; i < listemurs.length; i++){
+			console.log(listemurs[i]);
+		}*/
+
+		mur.position.set(coordX,0.5,coordZ);
 		scene.add(mur);
 	}
 	
-	// flaques magiques
-	for(var i=0; i<nbflaques ; i++) {
-		var cylindre = new THREE.CylinderGeometry(0.5,0.5,0.001,20,32);
-		var flaquemat = new THREE.MeshPhongMaterial({color: 0x00aa00});
+	//On load les flaques
+	objetXHRLoadFlaques  = new XMLHttpRequest();
+
+	objetXHRLoadFlaques.open("get","../../fonctions/loadFlaqueBD.php?idPartie="+idPartie,false);
+	objetXHRLoadFlaques.send(null);
+	
+	flaques = objetXHRLoadFlaques.responseText;
+
+	//Parse le message de retour
+	var coordFlaque = flaques.split(' ');
+
+	for(i =0; i < coordFlaque.length-1; i++){
+		var coordX = parseInt(coordFlaque[i].split(',')[0],10);
+		var coordZ = parseInt(coordFlaque[i].split(',')[1],10);
+
+		var cylindre = new THREE.CylinderGeometry(0.5,0.5,0.001,64);
+		var flaquemat = new THREE.MeshPhongMaterial({color: 0x800080});
 		var flaque = new THREE.Mesh(cylindre, flaquemat);
 		
-		do {
-			var ok = true;
-			var x = Math.floor(Math.random() * Math.floor(mapWidth));
-			var z = Math.floor(Math.random() * Math.floor(mapHeight));
-			
-			listeflaques.forEach(function(element) {
-				if(x == element.x && z == element.y) {
-						ok = false;
-				}
-			});
-			listemurs.forEach(function(element) {
-				if(x == element.x && z == element.y) {
-						ok = false;
-				}
-			});
-			
-		}
-		while(!ok);
+		var light = new THREE.PointLight( 0x800080, 1,2);
+		light.position.set(x,0.1,z);
+		scene.add(light);
+
+		listeflaques.push(new Point(coordX,coordZ));
 		
-		listeflaques.push(new Point(x,z));
-		
-		flaque.position.set(x,0,z);
+		flaque.position.set(coordX,0,coordZ);
 		scene.add(flaque);
 	}
 	
 	// bonus super-vue
 	for(var i=0; i<nbbonusVue ; i++) {
-		var sphere = new THREE.SphereGeometry(0.05, 8,8);
-		var bonusmat = new THREE.MeshPhongMaterial({color: 0xffffff});
-		var bonus = new THREE.Mesh(sphere, bonusmat);
-		
+		var sphere1 = new THREE.SphereGeometry(0.05, 16,16);
+		var sphere2 = new THREE.SphereGeometry(0.035, 16,16);
+		var sphere3 = new THREE.SphereGeometry(0.02, 16,16);	
+
+		var sphere1mat = new THREE.MeshPhongMaterial({color: 0xffffff});
+		var sphere2mat = new THREE.MeshPhongMaterial({color: 0x00ff7f});
+		var sphere3mat = new THREE.MeshPhongMaterial({color: 0x000000});
+
+		var mesh1 = new THREE.Mesh(sphere1,sphere1mat);
+		mesh1.position.y = 0.2;
+		var mesh2 = new THREE.Mesh(sphere2,sphere2mat);
+		mesh2.position.y = 0.2;
+		mesh2.position.x = 0.023;
+		var mesh3 = new THREE.Mesh(sphere3,sphere3mat);
+		mesh3.position.y = 0.2;
+		mesh3.position.x = 0.043;
+
+		var light = new THREE.PointLight( 0x00ff7f, 1,1);
+		light.position.y = 0.2;
+
+		var oeil = new THREE.Group();
+		oeil.add(mesh1);
+		oeil.add(mesh2);
+		oeil.add(mesh3);
+		oeil.add(light);
+
 		do {
 			var ok = true;
 			var x = Math.floor(Math.random() * Math.floor(mapWidth));
@@ -259,7 +191,7 @@ function init(nbF, nbM, dim) {
 				}
 			});
 			listebonus.forEach(function(element) {
-				if(x == element.x && z == element.y) {
+				if(x == element.objet.position.x && z == element.objet.position.z){
 						ok = false;
 				}
 			});
@@ -267,10 +199,147 @@ function init(nbF, nbM, dim) {
 		}
 		while(!ok);
 
-		bonus.name = "supervue"+i;
-		bonus.position.set(x,0.3,z);
-		listebonus.push(new Bonus(1,bonus));
-		scene.add(bonus);
+		oeil.name = "supervue"+i;
+		oeil.position.set(x,0,z);
+		listebonus.push(new Bonus(1,oeil));
+		scene.add(oeil);
+	}
+
+	// bonus bottes
+	for(var i=0; i<nbbonusBottes ; i++) {
+		var cylindre1 = new THREE.CylinderGeometry(0.05,0.05,0.2,32);
+		var sphere = new THREE.SphereGeometry(0.05,16,16);
+		var cylindre2 = new THREE.CylinderGeometry(0.05,0.05,0.1,32);
+
+		var torus = new THREE.TorusGeometry(0.02, 0.006, 16, 100 );
+
+		var circle1 = new THREE.CircleGeometry(0.03,16,0,7);
+		var circle2 = new THREE.CircleGeometry(0.07,3,0,0.4);
+		var circle3 = new THREE.CircleGeometry(0.06,3,0,0.3);
+		var circle4 = new THREE.CircleGeometry(0.05,3,0,0.2);
+
+		var mat1 = new THREE.MeshPhongMaterial({color: 0x371B07});
+		var mat2 = new THREE.MeshPhongMaterial({color: 0xffffff, side: THREE.DoubleSide});
+		var mat3 = new THREE.MeshPhongMaterial({color: 0xffff00});
+
+		var mesh1 = new THREE.Mesh(cylindre1,mat1);
+		mesh1.position.y = 0.4;
+		var mesh2 = new THREE.Mesh(sphere,mat1);
+		mesh2.position.y = 0.3;
+		var mesh3 = new THREE.Mesh(cylindre2,mat1);
+		mesh3.position.y = 0.3;
+		mesh3.position.z = 0.05;
+		mesh3.rotation.x = THREE.Math.degToRad(90);
+		var mesh4 = new THREE.Mesh(sphere,mat1);
+		mesh4.position.y = 0.3;
+		mesh4.position.z = 0.1;
+
+		var mesh5 = new THREE.Mesh(circle1, mat2);
+		mesh5.rotation.y = THREE.Math.degToRad(90);
+		mesh5.position.y = 0.3;
+		mesh5.position.x = 0.05;
+		var mesh6 = new THREE.Mesh(circle2, mat2);
+		mesh6.rotation.y = THREE.Math.degToRad(90);
+		mesh6.rotation.x = THREE.Math.degToRad(13);
+		mesh6.position.z = 0.01;
+		mesh6.position.y = 0.325;
+		mesh6.position.x = 0.05;
+		var mesh7 = new THREE.Mesh(circle3, mat2);
+		mesh7.rotation.y = THREE.Math.degToRad(90);
+		mesh7.rotation.x = THREE.Math.degToRad(-3);
+		mesh6.position.z = 0.005;
+		mesh7.position.y = 0.31;
+		mesh7.position.x = 0.05;
+		var mesh8 = new THREE.Mesh(circle4, mat2);
+		mesh8.rotation.y = THREE.Math.degToRad(90);
+		mesh8.rotation.x = THREE.Math.degToRad(-19);
+		mesh8.position.y = 0.3;
+		mesh8.position.x = 0.05;
+
+		var mesh12 = new THREE.Mesh(circle1, mat2);
+		mesh12.rotation.y = THREE.Math.degToRad(90);
+		mesh12.position.y = 0.3;
+		mesh12.position.x = -0.05;
+		var mesh13 = new THREE.Mesh(circle2, mat2);
+		mesh13.rotation.y = THREE.Math.degToRad(90);
+		mesh13.rotation.x = THREE.Math.degToRad(13);
+		mesh13.position.z = 0.01;
+		mesh13.position.y = 0.325;
+		mesh13.position.x = -0.05;
+		var mesh14 = new THREE.Mesh(circle3, mat2);
+		mesh14.rotation.y = THREE.Math.degToRad(90);
+		mesh14.rotation.x = THREE.Math.degToRad(-3);
+		mesh14.position.z = 0.005;
+		mesh14.position.y = 0.31;
+		mesh14.position.x = -0.05;
+		var mesh15 = new THREE.Mesh(circle4, mat2);
+		mesh15.rotation.y = THREE.Math.degToRad(90);
+		mesh15.rotation.x = THREE.Math.degToRad(-19);
+		mesh15.position.y = 0.3;
+		mesh15.position.x = -0.05;
+
+		var mesh9 = new THREE.Mesh(torus, mat3);
+		mesh9.position.y = 0.44;
+		mesh9.position.z = 0.03;
+		mesh9.rotation.x = THREE.Math.degToRad(90);
+		var mesh10 = new THREE.Mesh(torus, mat3);
+		mesh10.position.y = 0.41;
+		mesh10.position.z = 0.03;
+		mesh10.rotation.x = THREE.Math.degToRad(90);
+		var mesh11 = new THREE.Mesh(torus, mat3);
+		mesh11.position.y = 0.38;
+		mesh11.position.z = 0.03;
+		mesh11.rotation.x = THREE.Math.degToRad(90);
+
+		var light = new THREE.PointLight( 0xffffff, 1,1);
+		light.position.y = 0.4;
+
+		var botte = new THREE.Group();
+		botte.add(mesh1);
+		botte.add(mesh2);
+		botte.add(mesh3);
+		botte.add(mesh4);
+		botte.add(mesh5);
+		botte.add(mesh6);
+		botte.add(mesh7);
+		botte.add(mesh8);
+		botte.add(mesh9);
+		botte.add(mesh10);
+		botte.add(mesh11);
+		botte.add(mesh12);
+		botte.add(mesh13);
+		botte.add(mesh14);
+		botte.add(mesh15);
+		botte.add(light);
+
+		do {
+			var ok = true;
+			var x = Math.floor(Math.random() * Math.floor(mapWidth));
+			var z = Math.floor(Math.random() * Math.floor(mapHeight));
+			
+			listeflaques.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listemurs.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listebonus.forEach(function(element) {
+				if(x == element.objet.position.x && z == element.objet.position.z) {
+						ok = false;
+				}
+			});
+			
+		}
+		while(!ok);
+
+		botte.name = "bottes"+i;
+		botte.position.set(x,0,z);
+		listebonus.push(new Bonus(2,botte));
+		scene.add(botte);
 	}
 
 	//ajouts et positionnements
@@ -339,10 +408,27 @@ function init(nbF, nbM, dim) {
 				if(element.objet.position.y >= 0.45) {
 					element.anim = 1;
 				}
-				if(element.objet.position.y <= 0.3) {
+				if(element.objet.position.y <= 0) {
 					element.anim = 0;
 				}
+				element.objet.rotation.y += THREE.Math.degToRad(4);
 			}
+			if(element.type == 2) {
+				if(element.anim == 0) {
+					element.objet.position.y += 0.001;
+				}
+				else {
+					element.objet.position.y -= 0.001;
+				}
+				if(element.objet.position.y >= 0.08) {
+					element.anim = 1;
+				}
+				if(element.objet.position.y <= -0.1) {
+					element.anim = 0;
+				}
+				element.objet.rotation.y += THREE.Math.degToRad(2);
+			}
+			
 		});
 		requestAnimationFrame(animBonus);
 		renderer.render(scene,cam);
@@ -354,7 +440,10 @@ function init(nbF, nbM, dim) {
 				document.getElementById("nbBonus").innerHTML = "Super-Vue";
 				break;
 			case 2 :
-				document.getElementById("nbBonus").innerHTML = "A definir";
+				document.getElementById("nbBonus").innerHTML = "Bottes de vitesse ("+tempsActuelBottes+" secs)";
+				break;
+			case 3 :
+				document.getElementById("nbBonus").innerHTML = "Super Vitesse";
 				break;
 			default :
 				document.getElementById("nbBonus").innerHTML = "Objet inconnu";
@@ -415,7 +504,7 @@ function init(nbF, nbM, dim) {
 			
 			checkTeleportFlaque();
 			checkCol();
-			checkBonus()
+			checkBonus();
 		}
 		else requestAnimationFrame(move);			
 	}
@@ -515,7 +604,7 @@ function init(nbF, nbM, dim) {
 				e = element;
 			}
 		});
-		if(ok) {
+		if(ok && objetTenu==0) {
 			// ramasse objet, supprime de la map
 			objetTenu = e.type;
 			scene.remove(e.objet);
@@ -530,7 +619,7 @@ function init(nbF, nbM, dim) {
 					nbbonusVue -= 1;
 					break;
 				case 2:
-					// decrementer autre compteur
+					nbbonusBottes -= 1;
 					break;
 			}
 		}
@@ -543,6 +632,7 @@ function init(nbF, nbM, dim) {
 			if(supervue == 0) {
 				// active super-vue
 				supervue = 1;
+				scene.fog = null;
 				cam.position.y = 9;
 				switch(direction) {
 					case 0:
@@ -566,6 +656,7 @@ function init(nbF, nbM, dim) {
 			else {
 				// annule super-vue
 				supervue = 0;
+				scene.fog = new THREE.Fog(0x000000,3,3.5);
 				cam.position.y = 0.5;
 				cam.rotation.z = THREE.Math.degToRad(0);
 				cam.rotation.x = THREE.Math.degToRad(0);
@@ -574,13 +665,28 @@ function init(nbF, nbM, dim) {
 			}
 		}
 
-		// action autre objet
+		// bottes de vitesse
 		if(objetTenu == 2) {
-			
+			if(bottesActives==0){
+				bottesActives = 1;
+				tempsActuelBottes = dureeBottes;
+				vitDep = 0.2;
+				boostBottes = setInterval(boostVitesse, 1000);
+			}
+		}	
+	}
 
+	function boostVitesse() {
+		tempsActuelBottes--;
+		if(tempsActuelBottes <= 0) {
+			clearInterval(boostBottes);
+			boostBottes = null;
+			vitDep = 0.1;
+			objetTenu = 0;
+			bottesActives = 0;
+			tempsActuelBottes = dureeBottes;
+			document.getElementById("nbBonus").innerHTML = "Rien";
 		}
-
-		
 	}
 	
 	// modulo fonctionnant sur les negatifs
@@ -599,7 +705,7 @@ function init(nbF, nbM, dim) {
 	document.addEventListener("keydown", keyPressed);
 	function keyPressed(e){
 		// on vérifie qu'une animation ne soit pas déjà en cours
-		if(!moving && !rot) {
+		if(!moving && !rot && modespectateur==0) {
 			switch(e.code) {
 				case "ArrowUp":
 					if(!blocked && supervue!=1) {
@@ -615,18 +721,138 @@ function init(nbF, nbM, dim) {
 					if(supervue!=1) {
 						rotDir = 0;
 						rotate();
-						break;
 					}
+					break;
 				case "ArrowRight":
 					if(supervue!=1) {
 						rotDir = 1;
 						rotate();
-						break;
 					}
+					break;
+				// TEST du mode spectateur
+				case "Space":
+					spectate();
+					break;
+			}
+		}
+		else {
+			if(modespectateur == 1) {
+				switch(e.code) {
+					case "ArrowUp":
+						if(cam.position.z >= 1)cam.position.z -= 1;
+						break;
+					case "ArrowDown":
+						if(cam.position.z < mapHeight-0.5) cam.position.z += 1;
+						break;
+					case "ArrowLeft":
+						if(cam.position.x >= 1) cam.position.x -= 1;
+						break;
+					case "ArrowRight":
+						if(cam.position.x < mapWidth-0.5) cam.position.x += 1;
+						break;
+				}	
+			}
+			if(modespectateur >= 1) {
+				switch(e.code) {
+					case "Space":
+						spectate();
+						break;
+					case "KeyQ": // A
+						if(modespectateur==2) navigCam = mod(navigCam-1,tabCamJoueur.length);
+						specJoueur(-1);
+						break;
+					case "KeyW": // Z
+						if(modespectateur==2) navigCam = mod(navigCam+1,tabCamJoueur.length);;
+						specJoueur(1);
+						break;
+				}
 			}
 		}
 	}
-	
+
+	var camStockee = null;
+	var speccam = new THREE.PerspectiveCamera(60,width/height, 0.1,1000);
+
+	// 2e camera pour simuler un autre joueur
+	var cam2 = new THREE.PerspectiveCamera(60,width/height, 0.1,1000);
+	cam2.position.set(0,0.5,0);
+	cam2.rotation.y = THREE.Math.degToRad(90 - (90*3));
+	tabCamJoueur.push(cam2);
+	scene.add(cam2);
+
+	// 3e camera pour simuler un autre joueur
+	var cam3 = new THREE.PerspectiveCamera(60,width/height, 0.1,1000);
+	cam3.position.set(0,0.5,3);
+	cam3.rotation.y = THREE.Math.degToRad(90 - (90*3));
+	tabCamJoueur.push(cam3);
+	scene.add(cam3);
+
+
+	function spectate() {
+		// mise en mode spectateur
+
+		// uniquement pour joueur ayant perdu ou exterieur à la partie
+		switch(modespectateur) {
+
+			case 0: // passage en camera libre
+				modespectateur = 1;
+				camStockee = cam;
+				cam = speccam;
+
+				cam.position.y = 9;
+				cam.position.x = roundNumber(mapWidth/2,1);
+				cam.position.z = roundNumber(mapHeight/2,1);
+				cam.rotation.z = THREE.Math.degToRad(0);
+				cam.rotation.x = THREE.Math.degToRad(0);
+				cam.rotation.y = THREE.Math.degToRad(90 - (90*direction));
+				// vue aerienne de la map
+				switch(direction) {
+					case 0:
+						cam.rotation.y -= THREE.Math.degToRad(90);
+						cam.rotation.x = THREE.Math.degToRad(-90);
+						break;
+					case 1:
+						cam.rotation.x = THREE.Math.degToRad(-90);
+
+						break;
+					case 2:
+						cam.rotation.y += THREE.Math.degToRad(90);
+						cam.rotation.x = THREE.Math.degToRad(-90);
+						break;
+					case 3:
+						cam.rotation.y -= THREE.Math.degToRad(180);
+						cam.rotation.x = THREE.Math.degToRad(-90);
+						break;
+				}
+				scene.fog = null;
+				break;
+
+			case 1: // annule mode spectateur
+				modespectateur = 0;
+				cam.rotation.z = THREE.Math.degToRad(0);
+				cam.rotation.x = THREE.Math.degToRad(0);
+				cam.rotation.y = THREE.Math.degToRad(90 - (90*direction));
+				cam = camStockee;
+				camStockee = null;	
+				cam.position.y = 0.5;
+				scene.fog = new THREE.Fog(0x000000,3,3.5);	
+				break;
+
+			case 2: // camera de joueur vers camera libre
+				modespectateur = 0;
+				cam = camStockee;
+				spectate();
+				break;
+		}
+	}
+
+	// fonction pour switch entre les joueurs en mode spectateur
+	function specJoueur() {
+		modespectateur = 2;
+		cam = tabCamJoueur[navigCam];
+		scene.fog = new THREE.Fog(0x000000,3,3.5);	
+	}
+
 	function debugDir() {
 		if(direction == 0) {
 			console.log("Direction : "+direction+" (GAUCHE)");
@@ -643,10 +869,12 @@ function init(nbF, nbM, dim) {
 	}
 
 
-
+	
 //Compte à Rebours
+	var termine = false;
+	
 	compteArebours();
-
+	
 	var dureeGong = 5; // à ajuster
 	var temps = dureeGong;
 	var intervalId = null;
@@ -654,20 +882,22 @@ function init(nbF, nbM, dim) {
 	var equipe = 0;
 	document.getElementById("spanEquipe").innerHTML = "TEAM BLAIREAUX";
 
-	
-
 	function compteArebours(){
 		intervalId = setInterval(bip, 1000);
 	}	
 	function bip() {
-		temps--;
-		if(temps == 0){
-			gong();
-			temps = dureeGong;
+		if(!termine){
+			temps--;
+			if(temps == 0){
+				gong();
+				temps = dureeGong;
+			}
+			else {	
+				document.getElementById("chronoSecondes").innerHTML = temps;
+			}
 		}
-		else {	
-			document.getElementById("chronoSecondes").innerHTML = temps;
-		}	
+		else
+			document.getElementById("chronoSecondes").innerHTML = "Partie terminée";
 	}	
 	function gong(){
 		clearInterval(intervalId);
@@ -683,5 +913,31 @@ function init(nbF, nbM, dim) {
 			cube.material.color.setHex(0xaa0000);	
 		}
 	}
+	
+//Temps limite de la partie
+	dureePartie();
+	
+	var dureeMaxPartie = 12;
+	var tempsRestant = dureeMaxPartie;
+	var decomptePartie = null;
+	
+	function dureePartie(){
+		decomptePartie = setInterval(decompte, 1000);
+	}	
+	function decompte(){
+		if(tempsRestant>0)
+			tempsRestant--;
+		if(tempsRestant == 0){
+			finPartie();
+		}
+		else {	
+			document.getElementById("tempsPartie").innerHTML = tempsRestant;
+		}	
+	}
+	function finPartie(){
+		clearInterval(decomptePartie);
+		termine = true;
+		document.getElementById("tempsPartie").innerHTML = "TERMINE";
+		//Il faudra que le jeu s'arrete et verification des conditions de victoires, là seul le gong est annulé
+	}
 }
-
