@@ -757,11 +757,9 @@ function init() {
 						spectate();
 						break;
 					case "KeyQ": // A
-						if(modespectateur==2) navigCam = mod(navigCam-1,tabCamJoueur.length);
 						specJoueur(-1);
 						break;
 					case "KeyW": // Z
-						if(modespectateur==2) navigCam = mod(navigCam+1,tabCamJoueur.length);;
 						specJoueur(1);
 						break;
 				}
@@ -846,7 +844,9 @@ function init() {
 	}
 
 	// fonction pour switch entre les joueurs en mode spectateur
-	function specJoueur() {
+	function specJoueur(x) {
+		// x = 1 ou -1, pour naviguer dans le tableau
+		if(modespectateur==2) navigCam = mod(navigCam-x,tabCamJoueur.length);
 		modespectateur = 2;
 		cam = tabCamJoueur[navigCam];
 		scene.fog = new THREE.Fog(0x000000,3,3.5);	
