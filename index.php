@@ -96,7 +96,7 @@
 												- Cape d\'invisibilité durant [?] secondes.<br/>
 												- Les bottes de sept lieux permettant de se déplacer deux fois plus vite.<br/>
 												- La potion incognito qui rend de couleur neutre.<br/>
-												- La potion de super vue qui permet une vision de dessus en appuyant sur [?]. Pendant cette vision, aucun déplacement n\'est possible, il faut revenir avec la même touche en vue classique.
+												- La potion de super vue qui permet une vision de dessus en appuyant sur [🠣]. Pendant cette vision, aucun déplacement n\'est possible, il faut revenir avec la même touche en vue classique.
 										</p>
 								</th>
 
