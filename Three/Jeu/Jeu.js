@@ -11,9 +11,12 @@ var nbmurs = 5;
 var listemurs = [];
 var nbflaques = 2;
 var listeflaques = [];
+var nbcapes = 3;
+var listecapes = [];
 
 var nbbonusVue = 3;
 var nbbonusBottes = 3;
+var nbbonusCapes = 3;
 var listebonus = [];
 
 // objet tenu, 0 = pas d'objet, 1 = super-vue, ...
@@ -39,12 +42,20 @@ var rot = false;
 var moveCpt = 0;
 var rotCpt = 0; 
 
+//bonus
 var supervue = 0; // bool pour la super-vue
+
 var bottesActives = 0; // bool super vitesse
 var boostBottes = null; // compte à rebour vitesse
 var dureeBottes = 6;
 var tempsActuelBottes = 6;
 
+var invisible = 0 // bool cape d'invisibilité
+var boostInvisibilite = null // compte à rebour invisibilité
+var dureeInvisibilite = 6;
+var tempsActuelInvisiblite = 6;
+
+// mode spectateur
 var modespectateur = 0;
 var tabCamJoueur = [];
 var navigCam = 0;
@@ -451,6 +462,65 @@ function init() {
 		scene.add(botte);
 	}
 
+	// bonus capes
+	for(var i=0; i<nbbonusCapes ; i++) {
+		var bascape = new THREE.CylinderGeometry(0.037,0.175,0.25,12,1,true,0,4);
+		var hautcape = new THREE.CylinderGeometry(0.075,0.037,0.075,12,1,true,0,4);
+		var torus = new THREE.TorusGeometry(0.05, 0.007, 16, 100 );
+
+		var material = new THREE.MeshBasicMaterial({color: 0x8B0000});
+		//material.side = THREE.DoubleSide;
+		material.transparent = true;
+		material.opacity = 0.5;
+		var material2 = new THREE.MeshBasicMaterial({color: 0xffff00});
+		
+		var cape1 = new THREE.Mesh(bascape, material);
+		cape1.position.y = 0.25;
+		var cape2 = new THREE.Mesh(hautcape, material);
+		cape2.position.y = 0.4125;
+		var tore = new THREE.Mesh(torus,material2);
+		tore.position.y = 0.375;
+		tore.rotation.x = THREE.Math.degToRad(90);
+
+		var light = new THREE.PointLight(0xff0000,1,1.5);
+		light.position.y = 0.3;
+
+		var cape = new THREE.Group();
+		cape.add(cape1);
+		cape.add(cape2);
+		cape.add(tore);
+		cape.add(light);
+
+		do {
+			var ok = true;
+			var x = Math.floor(Math.random() * Math.floor(mapWidth));
+			var z = Math.floor(Math.random() * Math.floor(mapHeight));
+			
+			listeflaques.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listemurs.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listebonus.forEach(function(element) {
+				if(x == element.objet.position.x && z == element.objet.position.z) {
+						ok = false;
+				}
+			});
+			
+		}
+		while(!ok);
+
+		cape.name = "cape"+i;
+		cape.position.set(x,0,z);
+		listebonus.push(new Bonus(3,cape));
+		scene.add(cape);
+	}
+
 	//ajouts et positionnements
 	scene.add(sol);
 	
@@ -537,6 +607,21 @@ function init() {
 				}
 				element.objet.rotation.y += THREE.Math.degToRad(2);
 			}
+			if(element.type == 3) {
+				if(element.anim == 0) {
+					element.objet.position.y += 0.001;
+				}
+				else {
+					element.objet.position.y -= 0.001;
+				}
+				if(element.objet.position.y >= 0.15) {
+					element.anim = 1;
+				}
+				if(element.objet.position.y <= 0.05) {
+					element.anim = 0;
+				}
+				element.objet.rotation.y += THREE.Math.degToRad(2);
+			}
 			
 		});
 		requestAnimationFrame(animBonus);
@@ -552,7 +637,7 @@ function init() {
 				document.getElementById("nbBonus").innerHTML = "Bottes de vitesse ("+tempsActuelBottes+" secs)";
 				break;
 			case 3 :
-				document.getElementById("nbBonus").innerHTML = "Super Vitesse";
+				document.getElementById("nbBonus").innerHTML = "Cape d'invisibilité ("+tempsActuelInvisiblite+" secs)";
 				break;
 			default :
 				document.getElementById("nbBonus").innerHTML = "Objet inconnu";
@@ -730,6 +815,9 @@ function init() {
 				case 2:
 					nbbonusBottes -= 1;
 					break;
+				case 3:
+					nbbonusCapes -= 1;
+					break;	
 			}
 		}
 		
@@ -782,7 +870,18 @@ function init() {
 				vitDep = 0.2;
 				boostBottes = setInterval(boostVitesse, 1000);
 			}
-		}	
+		}
+
+		// invisibilité
+		if(objetTenu == 3) {
+			console.log("aaaaa");
+			if(invisible==0){
+				invisible = 1;
+				tempsActuelInvisiblite = dureeInvisibilite;
+				cube.visible = false;
+				boostInvisibilite = setInterval(modeInvisible, 1000);
+			}
+		}
 	}
 
 	function boostVitesse() {
@@ -797,6 +896,19 @@ function init() {
 			document.getElementById("nbBonus").innerHTML = "Rien";
 		}
 	}
+
+	function modeInvisible() {
+		tempsActuelInvisiblite--;
+		if(tempsActuelInvisiblite <= 0) {
+			clearInterval(boostInvisibilite);
+			cube.visible = true;
+			boostInvisibilite = null;
+			objetTenu = 0;
+			invisible = 0;
+			tempsActuelInvisiblite = dureeInvisibilite;
+			document.getElementById("nbBonus").innerHTML = "Rien";
+		}
+	} 
 	
 	// modulo fonctionnant sur les negatifs
 	function mod(n, m) {
