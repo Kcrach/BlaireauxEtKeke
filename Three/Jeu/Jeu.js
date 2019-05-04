@@ -60,6 +60,116 @@ function Bonus(type, objet) {
 	this.anim = 0;
 }
 
+function createPartie(nbF, nbM, dim){ //Quand quelqu'un crée une partie
+	var nbflaques = nbF;
+	var nbmurs = nbM;
+	var dimension = dim;
+	mapHeight = dim;
+	mapWidth = dim;
+
+	objetXHRAjoutMapEnBD  = new XMLHttpRequest();
+
+	objetXHRAjoutMapEnBD.open("get","ajouterMapBD.php",false);
+	objetXHRAjoutMapEnBD.send(null);
+	
+	idMap = parseInt(objetXHRAjoutMapEnBD.responseText,10);
+
+	console.log("ID MAP:" + idMap);
+
+	for(var i=0; i<nbmurs ; i++) {
+		
+		do {
+			var ok = true;
+			var x = Math.floor(Math.random() * Math.floor(dimension-2)) +1;
+			var z = Math.floor(Math.random() * Math.floor(dimension-2)) +1;	
+			listemurs.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+					ok = false;
+				}
+			});
+		}
+		while(!ok);
+		
+		listemurs.push(new Point(x,z));
+		
+		objetXHRAjoutMurEnBD  = new XMLHttpRequest();
+
+		objetXHRAjoutMurEnBD.open("get","ajouterMurBD.php?x="+x+"&y="+z+"&idMap="+idMap,false);
+
+		objetXHRAjoutMurEnBD.send(null);
+
+		/*test = objetXHRAjoutMurEnBD.responseText;
+
+		console.log("Test : "+ test);*/
+	}
+
+	for(var i=0; i<nbflaques ; i++) {
+		
+		do {
+			var ok = true;
+			var x = Math.floor(Math.random() * Math.floor(dimension));
+			var z = Math.floor(Math.random() * Math.floor(dimension));
+			
+			listeflaques.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listemurs.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			
+		}
+		while(!ok);
+		
+		listeflaques.push(new Point(x,z));
+
+		objetXHRAjoutFlaqueEnBD  = new XMLHttpRequest();
+
+		objetXHRAjoutFlaqueEnBD.open("get","ajouterFlaqueBD.php?x="+x+"&y="+z+"&idMap="+idMap,false);
+
+		objetXHRAjoutFlaqueEnBD.send(null);
+
+		/*test = objetXHRAjoutFlaqueEnBD.responseText;
+
+		console.log("Test : "+ test);*/
+	}
+
+	
+
+	objetXHRAjoutPartieEnBD  = new XMLHttpRequest();
+
+	objetXHRAjoutPartieEnBD.open("get","ajouterPartieBD.php?idMap="+idMap,false);
+	objetXHRAjoutPartieEnBD.send(null);
+
+	idPartie = parseInt(objetXHRAjoutPartieEnBD.responseText,10);
+
+	//console.log("IdP ="+idPartie);
+
+	objetXHRAjoutUPEnBD  = new XMLHttpRequest();
+
+	objetXHRAjoutUPEnBD.open("get","ajouterUserPartieBD.php?idPartie="+idPartie+"&typeUser=host",false);
+	objetXHRAjoutUPEnBD.send(null);
+
+	//test = objetXHRAjoutUPEnBD.responseText;
+
+	//console.log("ajouterPartieBD.php?idMap="+idMap);
+	//console.log("test"+test);
+	init(nbflaques, nbmurs, dimension);
+
+}
+
+function init(nbF, nbM, dim) { 
+	var nbflaques = nbF;
+	var nbmurs = nbM;
+	var dimension = dim;
+
+	console.log(nbflaques);
+	console.log(nbmurs);
+	console.log(dimension); } 
+
 function init() {
 	//scene et rendu
 	var scene = new THREE.Scene();
