@@ -12,7 +12,7 @@ $html = '<!DOCTYPE html>
 		<head>
 			<meta charset="utf-8">
 			<title>Connexion</title>
-			<link rel="stylesheet" href="../styles/login.css" >
+			<link rel="stylesheet" href="../styles/leaderboard.css" >
 			<link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet"> 
 		</head>
 	

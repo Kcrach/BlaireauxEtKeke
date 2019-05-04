@@ -71,7 +71,11 @@
 									</form>
 								
 									<a href="#"><p> Liens utiles </p></a>
-									<a href="pages/leaderboard.php"><p> Leaderboard </p></a>
+
+									<form method="post" action="pages/leaderboard.php">
+										<input type="submit" id="Rank" value="Leaderboard"/>
+									</form>
+									
 									<a href="#"><p> F.A.Q </p></a>
 
 								</th>
