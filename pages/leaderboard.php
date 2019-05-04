@@ -43,20 +43,29 @@ $html = '<!DOCTYPE html>
 			$play=$joueur->fetch();
 			$nomj=$play['player'];
 			if ($nomj==$user->getLogin()){
-		$html.='<tr><td>'.$i.'</td><td>'.$nomj.'</td><td>Votre place</td></tr>';
+				$html.='<tr><td>'.$i.'</td><td><a href="profil.php?profil='.$nomj.'">'.$nomj.'</a></td><td>Votre place</td></tr>';
 			}
 			else{
-			$html.='<tr><td>'.$i.'</td><td>'.$nomj.'</td></tr>';
+			$html.='<tr><td>'.$i.'</td><td><a href="profil.php?profil=' .$nomj .'">'.$nomj.'</a></td></tr>';
 			}
 		
 	}
 	
 		
-	  $html.='</body>';
+	   $html.='</table><form method="post" enctype="" action="../fonctions/RetourAccueil.php">
+			<input type="submit" id="retour" value="Retour accueil"/>
+			</form>
+						 
+			<form method="post" enctype="" action="../fonctions/deconnexion.php">
+			<input type="submit" id="deconnexion" value="Déconnexion"/>
+			</form>	';				
+
+	
+	 $html.='</body>';
 
 	
 
-	$html.="<script src='../js/popup.js'></script></html>";
+	$html.="<script src='../js/popup.js'></script>";
 	$html.="<script src='../js/themes.js'></script></html>";
 
 

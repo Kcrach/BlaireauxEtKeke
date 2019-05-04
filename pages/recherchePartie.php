@@ -49,9 +49,7 @@
 			<form method="post" enctype="" action="../fonctions/RetourAccueil.php">
 				<input type="submit" id="retour" value="Retour accueil"/>
  			</form>
-		</body>
-			
-		</html>';
+		</body>';
 		$html.="<script src='../js/themes.js'></script></html>";
 		echo $html;
 	}
