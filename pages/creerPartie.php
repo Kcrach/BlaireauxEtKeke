@@ -13,7 +13,7 @@
 
 						<head>
 							<meta charset="utf-8">
-							<title>Blaireaux vs Kékés</title>
+							<title>Connexion</title>
 							<link rel="stylesheet" href="../styles/creerPartie.css" name="theme" id="theme">
 							<link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet">
 							<!--<script src="../js/login.js"></script>-->
@@ -23,12 +23,16 @@
 
 						<header id="header">
 							<h1 id="titre">BLAIREAUX vs KÉKÉS</h1>
-							<span>Theme : </span>
-							<select id="themes" onchange="switchTheme(this.selectedIndex)">
-								<option selected="selected">Défaut</option>
-								<option>Royal</option>
-								<option>Hiver</option>
-							</select>
+							<form  id="theme" method="post">
+			  <fieldset id="changetheme">
+				<legend>Theme : </legend>
+				<select id="themes" onchange="switchTheme(this.selectedIndex)">
+					<option selected="selected">Défaut</option>
+					<option>Royal</option>
+					<option>Hiver</option>
+				</select>
+			  </fieldset>
+			</form>
 						</header>
 
 						<img src="../img/badger.png" align="center"/>
