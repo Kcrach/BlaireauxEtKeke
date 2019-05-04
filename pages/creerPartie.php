@@ -61,9 +61,7 @@
 							<input type="submit" id="deconnexion" value="Déconnexion"/>
 						</form>
 
- 					  </body>
-
-					</html>';
+ 					  </body>';
 		$html.="<script src='../js/themes.js'></script></html>";
 		echo $html;
 

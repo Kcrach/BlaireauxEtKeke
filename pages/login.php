@@ -113,7 +113,7 @@ $html = '<!DOCTYPE html>
 			break;
 	}
 
-	$html.="<script src='../js/popup.js'></script></html>";
+	$html.="<script src='../js/popup.js'></script>";
 	$html.="<script src='../js/themes.js'></script></html>";
 
 	echo $html;
