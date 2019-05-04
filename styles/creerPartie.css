@@ -6,7 +6,13 @@ body {
 	margin: 0%;
 	padding: 0%;
 }
-
+#changetheme
+{
+  display: block;
+  border: none;
+  text-align: right;
+  margin-right : 10%;
+}
 header {
 	animation: couleur0 5s infinite alternate-reverse;
 	-webkit-animation : couleur0 5s infinite alternate-reverse;

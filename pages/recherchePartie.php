@@ -20,19 +20,23 @@
 
 			<header id="header">
 				<h1 id="titre">BLAIREAUX vs KÉKÉS</h1>
-				<span>Theme : </span>
+				<form  id="theme" method="post">
+			  <fieldset id="changetheme">
+				<legend>Theme : </legend>
 				<select id="themes" onchange="switchTheme(this.selectedIndex)">
 					<option selected="selected">Défaut</option>
 					<option>Royal</option>
 					<option>Hiver</option>
 				</select>
+			  </fieldset>
+			</form>
 			</header>
 
 			<img src="../img/badger.png"/>
 			
 			<table id="table">
 				<th>
-					<fieldset>
+					<fieldset id ="recherpart">
 						<legend><h1 id="h1-01">Recherche d\'une partie en cours</h1></legend>
 						<form>
 							<div id="loader"></div> <br>
