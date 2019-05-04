@@ -27,15 +27,15 @@
 			if($var == "Défaut"){
 				$html1.='<select method="post" id="themes" onchange="switchTheme(this.selectedIndex)">
 				<option selected="selected">Défaut</option>
-				<option>Royal</option>
+				<option>Corail</option>
 				<option>Hiver</option>
 			</select>
 			</header>';}
 			else{
-			if($var == "Royal"){
+			if($var == "Corail"){
 				$html1.='<select method="post" id="themes" onchange="switchTheme(this.selectedIndex)">
 				<option>Défaut</option>
-				<option selected="selected">Royal</option>
+				<option selected="selected">Corail</option>
 				<option>Hiver</option>
 			</select>
 			</header>';}
@@ -43,7 +43,7 @@
 				if($var == "Hiver"){
 				$html1.='<select method="post" id="themes" onchange="switchTheme(this.selectedIndex)">
 				<option >Défaut</option>
-				<option>Royal</option>
+				<option>Corail</option>
 				<option selected="selected">Hiver</option>
 			</select>
 							</header>';}}}}
@@ -51,7 +51,7 @@
 			else{
 			$html1.='<select method="post" id="themes" onchange="switchTheme(this.selectedIndex)">
 				<option selected="selected">Défaut</option>
-				<option>Royal</option>
+				<option>Corail</option>
 				<option>Hiver</option>
 			</select>
 			</header>';}

@@ -29,20 +29,20 @@ $html = '<!DOCTYPE html>
 				<legend>Theme : </legend>
 				<select id="themes" onchange="switchTheme(this.selectedIndex)">
 					<option selected="selected">Défaut</option>
-					<option>Royal</option>
+					<option>Corail</option>
 					<option>Hiver</option>
 				</select>
 			  </fieldset>
 			</form>
 			</header>';}
 			else{
-			if($var == "Royal"){
+			if($var == "Corail"){
 				$html.='<form  id="theme" method="post">
 			  <fieldset id="changetheme">
 				<legend>Theme : </legend>
 				<select id="themes" onchange="switchTheme(this.selectedIndex)">
 					<option selected="selected">Défaut</option>
-					<option>Royal</option>
+					<option>Corail</option>
 					<option>Hiver</option>
 				</select>
 			  </fieldset>
@@ -55,7 +55,7 @@ $html = '<!DOCTYPE html>
 				<legend>Theme : </legend>
 				<select id="themes" onchange="switchTheme(this.selectedIndex)">
 					<option selected="selected">Défaut</option>
-					<option>Royal</option>
+					<option>Corail</option>
 					<option>Hiver</option>
 				</select>
 			  </fieldset>
@@ -69,7 +69,7 @@ $html = '<!DOCTYPE html>
 				<legend>Theme : </legend>
 				<select id="themes" onchange="switchTheme(this.selectedIndex)">
 					<option selected="selected">Défaut</option>
-					<option>Royal</option>
+					<option>Corail</option>
 					<option>Hiver</option>
 				</select>
 			  </fieldset>

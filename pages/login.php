@@ -22,7 +22,7 @@ $html = '<!DOCTYPE html>
 				<legend>Theme : </legend>
 				<select id="themes" onchange="switchTheme(this.selectedIndex)">
 					<option selected="selected">Défaut</option>
-					<option>Royal</option>
+					<option>Corail</option>
 					<option>Hiver</option>
 				</select>
 			  </fieldset>
