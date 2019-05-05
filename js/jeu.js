@@ -993,6 +993,7 @@ function init(idPartie) {
 			console.log(cube.position);
 			console.log("\n");
 			
+			//checkJoueur() 
 			checkTeleportFlaque();
 			checkCol();
 			checkBonus();
@@ -1124,6 +1125,42 @@ function init(idPartie) {
 		}
 		
 	}
+
+	/*
+	// rencontre avec un autre joueur
+	function checkJoueur() {
+		var ok = false;
+		var e;
+		listejoueurs.forEach(function(element) {
+			if(cube.position.x == element.objet.position.x && cube.position.z == element.objet.position.z) {
+				ok = true;
+				e = element;
+			}
+		});
+		if(ok) {
+			// si l'on peut manger et que l'autre n'est pas invincible
+			if(equipe==1 && e.bouclier==0) {
+				scene.remove(e.objet);
+				for(var i = 0; i < listejoueurs.length; i++){ 
+					if(listejoueurs[i].objet.id == e.objet.id) {
+				    	listejoueurs.splice(i, 1); 
+			   		}
+				}
+				// passer l'autre en mode spectateur
+			}
+			// si l'autre peut manger et que l'on est pas invincible
+			else if(e.equipe == 1 && equipe==0) {
+				scene.remove(cube);
+				for(var i = 0; i < listejoueurs.length; i++){ 
+					if(listejoueurs[i].objet.id == id) {
+				    	listejoueurs.splice(i, 1); 
+			   		}
+				}
+				// nous faire passer en spectateur
+			}	
+		}	
+	}
+	*/
 
 	function utiliserBonus() {
 		//action super-vue
