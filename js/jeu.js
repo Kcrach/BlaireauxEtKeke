@@ -1087,7 +1087,8 @@ function init(idPartie) {
 			if(bottesActives==0){
 				bottesActives = 1;
 				tempsActuelBottes = dureeBottes;
-				vitDep = 0.2;
+				vitDep *= 2;
+				vitRot *= 2;
 				boostBottes = setInterval(boostVitesse, 1000);
 			}
 		}
@@ -1118,7 +1119,8 @@ function init(idPartie) {
 		if(tempsActuelBottes <= 0) {
 			clearInterval(boostBottes);
 			boostBottes = null;
-			vitDep = 0.1;
+			vitDep /= 2;
+			vitRot /= 2;
 			objetTenu = 0;
 			bottesActives = 0;
 			tempsActuelBottes = dureeBottes;
