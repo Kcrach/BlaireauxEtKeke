@@ -14,10 +14,11 @@ var listeflaques = [];
 var nbcapes = 3;
 var listecapes = [];
 
-var nbbonusVue = 2;
+var nbbonusVue = 1;
 var nbbonusBottes = 2;
+var nbbonusBouclier = 2;
 var nbbonusCapes = 2;
-var nbbonusIncognito = 3;
+var nbbonusIncognito = 1;
 var listebonus = [];
 
 // objet tenu, 0 = pas d'objet, 1 = super-vue, ...
@@ -60,6 +61,11 @@ var incognito = 0 // bool cape d'invisibilité
 var boostIncognito = null // compte à rebour invisibilité
 var dureeIncognito = 6;
 var tempsActuelIncognito = 6;
+
+var bouclier = 0 // bool cape d'invisibilité
+var boostBouclier = null // compte à rebour invisibilité
+var dureeBouclier = 6;
+var tempsActuelBouclier = 6;
 
 // mode spectateur
 var modespectateur = 0;
@@ -611,6 +617,61 @@ function init(idPartie) {
 		listebonus.push(new Bonus(4,inco));
 		scene.add(inco);
 	}
+	// bonus Bouclier
+	for(var i=0; i<nbbonusBouclier ; i++) {
+ 		var geom1 = new THREE.BoxGeometry(0.4,0.4,0.02);
+ 		var geom2 = new THREE.BoxGeometry(0.2,0.2,0.02);
+
+ 		var material = new THREE.MeshBasicMaterial({color: 0xffce33}); 
+ 		var material2 = new THREE.MeshBasicMaterial({color: 0xff9633}); 
+
+ 		var mesh1 = new THREE.Mesh(geom1,material);
+ 		mesh1.position.y = 0.4;
+ 		mesh1.position.x = -0.02;
+ 		mesh1.position.z = 0.09;
+
+ 		var mesh2 = new THREE.Mesh(geom1,material);
+ 		mesh2.position.y = 0.4;
+ 		mesh2.position.x = 0.02;
+ 		mesh2.position.z = 0.09;
+
+
+		var light = new THREE.PointLight(0x0000ff,1,1.5);
+		light.position.y = 0.3;
+
+		var bouc = new THREE.Group();
+		bouc.add(mesh1);
+		bouc.add(mesh2);
+		bouc.add(light);
+
+		do {
+			var ok = true;
+			var x = Math.floor(Math.random() * Math.floor(mapWidth));
+			var z = Math.floor(Math.random() * Math.floor(mapHeight));
+			
+			listeflaques.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listemurs.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listebonus.forEach(function(element) {
+				if(x == element.objet.position.x && z == element.objet.position.z) {
+						ok = false;
+				}
+			});
+			
+		}
+		while(!ok);
+		bouc.name = "bouclier"+i;
+		bouc.position.set(x,0,z);
+		listebonus.push(new Bonus(5,bouc));
+		scene.add(bouc);
+	}
 
 	//ajouts et positionnements
 	scene.add(sol);
@@ -825,6 +886,21 @@ function init(idPartie) {
 				}
 				element.objet.rotation.y += THREE.Math.degToRad(1);
 			}
+			if(element.type == 5) {
+				if(element.anim == 0) {
+					element.objet.position.y += 0.001;
+				}
+				else {
+					element.objet.position.y -= 0.001;
+				}
+				if(element.objet.position.y >= 0.15) {
+					element.anim = 1;
+				}
+				if(element.objet.position.y <= 0.05) {
+					element.anim = 0;
+				}
+				element.objet.rotation.y += THREE.Math.degToRad(1);
+			}
 			
 		});
 		requestAnimationFrame(animBonus);
@@ -844,6 +920,9 @@ function init(idPartie) {
 				break;
 			case 4 :
 				document.getElementById("nbBonus").innerHTML = "Incognito ("+tempsActuelIncognito+" secs)";
+				break;
+			case 5 :
+				document.getElementById("nbBonus").innerHTML = "Bouclier ("+tempsActuelBouclier+" secs)";
 				break;
 			default :
 				document.getElementById("nbBonus").innerHTML = "Objet inconnu";
@@ -1037,6 +1116,8 @@ function init(idPartie) {
 					break;	
 				case 4:
 					nbbonusIncognito -= 1;
+				case 5:
+					nbbonusBouclier -= 1;
 					break;	
 			}
 		}
@@ -1112,6 +1193,20 @@ function init(idPartie) {
 				boostIncognito = setInterval(modeIncognito, 1000);
 			}
 		}
+		// Bouclier
+		if(objetTenu == 5) {
+			if(bouclier==0){
+				bouclier = 1;
+				if(equipe == 0) {
+					cube.material.color.setHex(0x853b29);	
+				}
+				else {
+					cube.material.color.setHex(0xff8300);	
+				}
+				tempsActuelBouclier = dureeBouclier;
+				boostBouclier = setInterval(modeBouclier, 1000);
+			}
+		}
 	}
 
 	function boostVitesse() {
@@ -1155,6 +1250,24 @@ function init(idPartie) {
 			objetTenu = 0;
 			incognito = 0;
 			tempsActuelIncognito = dureeIncognito;
+			document.getElementById("nbBonus").innerHTML = "Rien";
+		}
+	}
+
+	function modeBouclier() {
+		tempsActuelBouclier--;
+		if(tempsActuelBouclier <= 0) {
+			clearInterval(boostBouclier);
+			if(equipe == 0) {
+				cube.material.color.setHex(0xaa0000);	
+			}
+			else {
+				cube.material.color.setHex(0xaaaa00);
+			}
+			boostBouclier = null;
+			objetTenu = 0;
+			bouclier = 0;
+			tempsActuelBouclier = dureeBouclier;
 			document.getElementById("nbBonus").innerHTML = "Rien";
 		}
 	}
