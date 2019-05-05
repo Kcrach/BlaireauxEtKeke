@@ -70,13 +70,17 @@
 										<input type="submit" id="RechPartie" value="Rejoindre partie"/>
 									</form>
 								
-									<a href="pages/enConstruction.php"><p> Liens utiles </p></a>
+									<form method="post" action="pages/enConstruction.php">
+										<input type="submit" id="liensut" value="Liens utiles"/>
+									</form>
 
 									<form method="post" action="pages/leaderboard.php">
 										<input type="submit" id="Rank" value="Leaderboard"/>
 									</form>
 									
-									<a href="pages/enConstruction.php"><p> F.A.Q </p></a>
+									<form method="post" action="pages/FAQ.php">
+										<input type="submit" id="FAQ" value="F.A.Q"/>
+									</form>
 
 								</th>
 
