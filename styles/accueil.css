@@ -6,7 +6,13 @@ body {
 	margin: 0%;
 	padding: 0%;
 }
-
+#changetheme
+{
+  display: block;
+  border: none;
+  text-align: right;
+  margin-right : 10%;
+}
 header {
 	animation: couleur0 5s infinite alternate-reverse;
 }
@@ -385,7 +391,7 @@ select{
 	border-radius: 5px;
 }
 
-#CréerPartie, #RechPartie{
+#CréerPartie, #RechPartie, #Rank{
 	background-color: lightsalmon;
 	margin-top: 20px;
 	width: 150px;
@@ -394,7 +400,7 @@ select{
 	transition: 0.15s;
 }
 
-#CréerPartie:hover, #RechPartie:hover{
+#CréerPartie:hover, #RechPartie:hover, #Rank:hover{
 	margin-top: 15px;
 	height: 45px;
 }

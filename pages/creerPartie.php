@@ -13,7 +13,7 @@
 
 						<head>
 							<meta charset="utf-8">
-							<title>Connexion</title>
+							<title>Blaireaux vs Kékés</title>
 							<link rel="stylesheet" href="../styles/creerPartie.css" name="theme" id="theme">
 							<link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet">
 							<!--<script src="../js/login.js"></script>-->
@@ -23,10 +23,11 @@
 
 						<header id="header">
 							<h1 id="titre">BLAIREAUX vs KÉKÉS</h1>
+							
 							<span>Theme : </span>
 							<select id="themes" onchange="switchTheme(this.selectedIndex)">
 								<option selected="selected">Défaut</option>
-								<option>Royal</option>
+								<option>Corail</option>
 								<option>Hiver</option>
 							</select>
 						</header>
@@ -48,7 +49,22 @@
 							<input type="number" min="0" id="nbMur" name="nbMur"/></br>
 
 							</br>
-
+							<label>Type de partie :</label>
+							</br>
+							</br>
+							<input type="radio" id="Public" name="typepartie" onchange="typePartie()" value="Publique" checked="checked">
+							<label for="Public"> Partie Publique </label>
+							</br>
+							<input type="radio" id="Privée" name="typepartie" onchange="typePartie()" value="Privée">
+							<label for="Privée"> Partie Privée </label>
+							</br>
+							</br>
+							<div id="bloqué">
+								<label for"mdp"> Mot de passe :</label>
+								</br>
+								<input type="text" id="mdp" name="mdp">
+								</br>
+							</div>
 							<input type="submit" id="créerPartie" value="Créer la partie"/>
 
 						</form>
@@ -61,9 +77,7 @@
 							<input type="submit" id="deconnexion" value="Déconnexion"/>
 						</form>
 
- 					  </body>
-
-					</html>';
+ 					  </body>';
 		$html.="<script src='../js/themes.js'></script></html>";
 		echo $html;
 
