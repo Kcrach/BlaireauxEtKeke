@@ -62,8 +62,8 @@ var boostIncognito = null // compte à rebour invisibilité
 var dureeIncognito = 6;
 var tempsActuelIncognito = 6;
 
-var bouclier = 0 // bool cape d'invisibilité
-var boostBouclier = null // compte à rebour invisibilité
+var bouclier = 0 // bool bouclier
+var boostBouclier = null // compte à rebour bouclier
 var dureeBouclier = 6;
 var tempsActuelBouclier = 6;
 
@@ -617,6 +617,7 @@ function init(idPartie) {
 		listebonus.push(new Bonus(4,inco));
 		scene.add(inco);
 	}
+
 	// bonus Bouclier
 	for(var i=0; i<nbbonusBouclier ; i++) {
  		var geom1 = new THREE.BoxGeometry(0.4,0.4,0.02);
@@ -636,7 +637,7 @@ function init(idPartie) {
  		mesh2.position.z = 0.09;
 
 
-		var light = new THREE.PointLight(0x0000ff,1,1.5);
+		var light = new THREE.PointLight(0xffff00,1,1.5);
 		light.position.y = 0.3;
 
 		var bouc = new THREE.Group();
