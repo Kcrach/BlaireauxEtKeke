@@ -52,7 +52,22 @@
 							<input type="number" min="0" id="nbMur" name="nbMur"/></br>
 
 							</br>
-
+							<label>Type de partie :</label>
+							</br>
+							</br>
+							<input type="radio" id="Public" name="typepartie" onchange="typePartie()" value="Publique" checked="checked">
+							<label for="Public"> Partie Publique </label>
+							</br>
+							<input type="radio" id="Privée" name="typepartie" onchange="typePartie()" value="Privée">
+							<label for="Privée"> Partie Privée </label>
+							</br>
+							</br>
+							<div id="bloqué">
+								<label for"mdp"> Mot de passe :</label>
+								</br>
+								<input type="text" id="mdp" name="mdp">
+								</br>
+							</div>
 							<input type="submit" id="créerPartie" value="Créer la partie"/>
 
 						</form>
