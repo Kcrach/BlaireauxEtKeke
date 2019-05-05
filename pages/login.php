@@ -17,21 +17,19 @@ $html = '<!DOCTYPE html>
 
 		<header id="header">
 			<h1 id="titre">BLAIREAUX vs KÉKÉS</h1>
-			
-				<span>Theme : </span>
-				<select id="themes" onchange="switchTheme(this.selectedIndex)">
-					<option selected="selected">Défaut</option>
-					<option>Corail</option>
-					<option>Hiver</option>
-				</select>
-			  
+			<span>Theme : </span>
+			<select id="themes" onchange="switchTheme(this.selectedIndex)">
+				<option selected="selected">Défaut</option>
+				<option>Royal</option>
+				<option>Hiver</option>
+			</select>
 		</header>
 
 		<img src="../img/badger.png" align="center"/>
 	
 		<table id="table">
 			<th>
-				<fieldset id="seconnecter">
+				<fieldset>
 					<legend><h1>Se connecter</h1></legend>
 					<form method="post" action="../fonctions/connexion.php">
 						<label>Pseudo : </label><br/>
@@ -46,7 +44,7 @@ $html = '<!DOCTYPE html>
 			</th>
 			
 			<th>
-				<fieldset id="sinscrire">
+				<fieldset>
 					<legend><h1>Créer un compte</h1></legend>
 					<form method="post" action="../fonctions/inscription.php">
 						<label>Pseudo : </label> <br/>
@@ -115,7 +113,7 @@ $html = '<!DOCTYPE html>
 			break;
 	}
 
-	$html.="<script src='../js/popup.js'></script>";
+	$html.="<script src='../js/popup.js'></script></html>";
 	$html.="<script src='../js/themes.js'></script></html>";
 
 	echo $html;

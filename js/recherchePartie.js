@@ -14,7 +14,7 @@ function trouve(){
 		if(timeleft <= 0)
 			clearInterval(downloadTimer);
 		if(document.getElementById("progressBar").value == 5)
-			document.location.href="../Three/Jeu/Jeu.html";// juste pour y acceder, au final emmenera vers une vraie partie
+			document.location.href="../Three/Lucas/test.html";// juste pour y acceder, au final emmenera vers une vraie partie
 		}, 1000);
 	
 }

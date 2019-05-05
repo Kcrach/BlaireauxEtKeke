@@ -6,13 +6,7 @@ body {
 	margin: 0%;
 	padding: 0%;
 }
-#changetheme
-{
-  display: block;
-  border: none;
-  text-align: right;
-  margin-right : 10%;
-}
+
 p {
 	color: white;
 	font-family: 'Roboto';
@@ -674,7 +668,7 @@ th {
 	vertical-align: top;
 }
 
-#recherpart {
+fieldset {
 	border-radius: 10px;
 	border: 1px solid white;
 	height: 460px;

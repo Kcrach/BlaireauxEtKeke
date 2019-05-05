@@ -26,7 +26,12 @@
     border-radius: 1em;
     text-align: center;
 } 
-
+#monjoueur{
+	border-color: yellow;
+	border-width:1px;
+	border-style:solid;
+	width: 50%;
+}
 #popup_content button{
 	border: none;
 	padding: 0.5em;
@@ -706,18 +711,11 @@ th {
 	vertical-align: top;
 }
 
-#seconnecter, #sinscrire {
+fieldset {
 	border-radius: 10px;
 	border: 1px solid white;
 	height: 460px;
 	padding-top: 25px;
-}
-#changetheme
-{
-  display: block;
-  border: none;
-  text-align: right;
-  margin-right : 10%;
 }
 
 legend { 
@@ -731,10 +729,7 @@ input {
 	border: none;
 	transition: 0.3s;
 }
-#theme
-{
-	align: left;
-}
+
 #connexion, #inscription {
 	background-color: white;
 	margin-top: 20px;

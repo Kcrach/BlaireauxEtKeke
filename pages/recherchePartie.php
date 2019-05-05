@@ -20,21 +20,19 @@
 
 			<header id="header">
 				<h1 id="titre">BLAIREAUX vs KÉKÉS</h1>
-				
 				<span>Theme : </span>
 				<select id="themes" onchange="switchTheme(this.selectedIndex)">
 					<option selected="selected">Défaut</option>
-					<option>Corail</option>
+					<option>Royal</option>
 					<option>Hiver</option>
 				</select>
-			  
 			</header>
 
 			<img src="../img/badger.png"/>
 			
 			<table id="table">
 				<th>
-					<fieldset id ="recherpart">
+					<fieldset>
 						<legend><h1 id="h1-01">Recherche d\'une partie en cours</h1></legend>
 						<form>
 							<div id="loader"></div> <br>
@@ -55,7 +53,9 @@
 			<form method="post" enctype="" action="../fonctions/RetourAccueil.php">
 				<input type="submit" id="retour" value="Retour accueil"/>
  			</form>
-		</body>';
+		</body>
+			
+		</html>';
 		$html.="<script src='../js/themes.js'></script></html>";
 		echo $html;
 	}
