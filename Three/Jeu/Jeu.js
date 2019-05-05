@@ -631,6 +631,11 @@ function init() {
 					ok = false;
 				}
 			});
+			listebonus.forEach(function(element) {
+				if(x == element.objet.position.x && z == element.objet.position.z){
+					ok = false;
+				}
+			});
 		} while(!ok);
 		
 		cube.position.x = x;
