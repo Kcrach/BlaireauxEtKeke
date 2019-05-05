@@ -2,7 +2,7 @@ function applitexte1(){
 	
 			document.getElementById("reponse").innerHTML = "<h1>Qui sommes Nous?</h1><br/>"; 
 			document.getElementById("reponse").innerHTML += "<p>Nous sommes un groupe de projets de L3 informatique inscrits à l'université de bourgogne, nous nous nommons Thomas Bazin, Lucas Mazeron, Louis"; 
-			document.getElementById("reponse").innerHTML += " Guillotin, Sébastien Ravier et Aurélien Garnier.</p><br/>";
+			document.getElementById("reponse").innerHTML += " Guillotin, Sébastien Ravier, Jules Gallay et Aurélien Garnier.</p><br/>";
 
 	}
 function texte2(){
