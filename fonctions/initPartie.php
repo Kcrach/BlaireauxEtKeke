@@ -21,6 +21,10 @@
 						</head>
 
 						<body onload="createPartie('.$nbFlaques.','.$nbMurs.','.$dimensionGrille.');">
+						<div>
+							<strong>Fin de la partie dans:</strong>
+							<span id="tempsPartie" ></span><br/>
+						</div>
 
 						<div>
 							<h2>COMMANDES</h2>
