@@ -27,15 +27,15 @@
 			if($var == "Défaut"){
 				$html1.='<select method="post" id="themes" onchange="switchTheme(this.selectedIndex)">
 				<option selected="selected">Défaut</option>
-				<option>Royal</option>
+				<option>Corail</option>
 				<option>Hiver</option>
 			</select>
 			</header>';}
 			else{
-			if($var == "Royal"){
+			if($var == "Corail"){
 				$html1.='<select method="post" id="themes" onchange="switchTheme(this.selectedIndex)">
 				<option>Défaut</option>
-				<option selected="selected">Royal</option>
+				<option selected="selected">Corail</option>
 				<option>Hiver</option>
 			</select>
 			</header>';}
@@ -43,7 +43,7 @@
 				if($var == "Hiver"){
 				$html1.='<select method="post" id="themes" onchange="switchTheme(this.selectedIndex)">
 				<option >Défaut</option>
-				<option>Royal</option>
+				<option>Corail</option>
 				<option selected="selected">Hiver</option>
 			</select>
 							</header>';}}}}
@@ -51,7 +51,7 @@
 			else{
 			$html1.='<select method="post" id="themes" onchange="switchTheme(this.selectedIndex)">
 				<option selected="selected">Défaut</option>
-				<option>Royal</option>
+				<option>Corail</option>
 				<option>Hiver</option>
 			</select>
 			</header>';}
@@ -70,9 +70,13 @@
 										<input type="submit" id="RechPartie" value="Rejoindre partie"/>
 									</form>
 								
-									<a href="#"><p> Liens utiles </p></a>
-									<a href="pages/leaderboard.php"><p> Leaderboard </p></a>
-									<a href="#"><p> F.A.Q </p></a>
+									<a href="pages/enConstruction.php"><p> Liens utiles </p></a>
+
+									<form method="post" action="pages/leaderboard.php">
+										<input type="submit" id="Rank" value="Leaderboard"/>
+									</form>
+									
+									<a href="pages/enConstruction.php"><p> F.A.Q </p></a>
 
 								</th>
 
@@ -92,7 +96,7 @@
 												- Cape d\'invisibilité durant [?] secondes.<br/>
 												- Les bottes de sept lieux permettant de se déplacer deux fois plus vite.<br/>
 												- La potion incognito qui rend de couleur neutre.<br/>
-												- La potion de super vue qui permet une vision de dessus en appuyant sur [?]. Pendant cette vision, aucun déplacement n\'est possible, il faut revenir avec la même touche en vue classique.
+												- La potion de super vue qui permet une vision de dessus en appuyant sur [🠣]. Pendant cette vision, aucun déplacement n\'est possible, il faut revenir avec la même touche en vue classique.
 										</p>
 								</th>
 
@@ -107,9 +111,7 @@
 							<input type="submit" id="deconnexion" value="Déconnexion"/>
  						</form>
 
- 					  </body>
-
-					</html>';
+ 					  </body>';
 					$html2.="<script src='js/themes.js'></script></html>";
 
 
