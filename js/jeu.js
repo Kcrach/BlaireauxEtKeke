@@ -11,9 +11,13 @@ var nbmurs = 5;
 var listemurs = [];
 var nbflaques = 2;
 var listeflaques = [];
+var nbcapes = 3;
+var listecapes = [];
 
-var nbbonusVue = 3;
-var nbbonusBottes = 3;
+var nbbonusVue = 2;
+var nbbonusBottes = 2;
+var nbbonusCapes = 2;
+var nbbonusIncognito = 3;
 var listebonus = [];
 
 // objet tenu, 0 = pas d'objet, 1 = super-vue, ...
@@ -39,12 +43,25 @@ var rot = false;
 var moveCpt = 0;
 var rotCpt = 0; 
 
+//bonus
 var supervue = 0; // bool pour la super-vue
+
 var bottesActives = 0; // bool super vitesse
 var boostBottes = null; // compte à rebour vitesse
 var dureeBottes = 6;
 var tempsActuelBottes = 6;
 
+var invisible = 0 // bool cape d'invisibilité
+var boostInvisibilite = null // compte à rebour invisibilité
+var dureeInvisibilite = 6;
+var tempsActuelInvisiblite = 6;
+
+var incognito = 0 // bool cape d'invisibilité
+var boostIncognito = null // compte à rebour invisibilité
+var dureeIncognito = 6;
+var tempsActuelIncognito = 6;
+
+// mode spectateur
 var modespectateur = 0;
 var tabCamJoueur = [];
 var navigCam = 0;
@@ -342,6 +359,140 @@ function init(idPartie) {
 		scene.add(botte);
 	}
 
+	// bonus capes
+	for(var i=0; i<nbbonusCapes ; i++) {
+		var bascape = new THREE.CylinderGeometry(0.037,0.175,0.25,12,1,true,0,4);
+		var hautcape = new THREE.CylinderGeometry(0.075,0.037,0.075,12,1,true,0,4);
+		var torus = new THREE.TorusGeometry(0.05, 0.007, 16, 100 );
+
+		var material = new THREE.MeshBasicMaterial({color: 0x8B0000});
+		material.transparent = true;
+		material.opacity = 0.5;
+		var material2 = new THREE.MeshBasicMaterial({color: 0xffff00});
+		
+		var cape1 = new THREE.Mesh(bascape, material);
+		cape1.position.y = 0.25;
+		var cape2 = new THREE.Mesh(hautcape, material);
+		cape2.position.y = 0.4125;
+		var tore = new THREE.Mesh(torus,material2);
+		tore.position.y = 0.375;
+		tore.rotation.x = THREE.Math.degToRad(90);
+
+		var light = new THREE.PointLight(0xff0000,1,1.5);
+		light.position.y = 0.3;
+
+		var cape = new THREE.Group();
+		cape.add(cape1);
+		cape.add(cape2);
+		cape.add(tore);
+		cape.add(light);
+
+		do {
+			var ok = true;
+			var x = Math.floor(Math.random() * Math.floor(mapWidth));
+			var z = Math.floor(Math.random() * Math.floor(mapHeight));
+			
+			listeflaques.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listemurs.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listebonus.forEach(function(element) {
+				if(x == element.objet.position.x && z == element.objet.position.z) {
+						ok = false;
+				}
+			});
+			
+		}
+		while(!ok);
+
+		cape.name = "cape"+i;
+		cape.position.set(x,0,z);
+		listebonus.push(new Bonus(3,cape));
+		scene.add(cape);
+	}
+
+	// bonus incognito
+	for(var i=0; i<nbbonusIncognito ; i++) {
+ 		var geom1 = new THREE.BoxGeometry(0.08,0.05,0.02);
+ 		var geom2 = new THREE.BoxGeometry(0.1,0.02,0.015);
+ 		var geom3 = new THREE.BoxGeometry(0.1,0.02,0.02);
+
+ 		var material = new THREE.MeshBasicMaterial({color: 0x222222}); 
+ 		var material2 = new THREE.MeshBasicMaterial({color: 0x333333}); 
+
+ 		var mesh1 = new THREE.Mesh(geom1,material);
+ 		mesh1.position.y = 0.4;
+ 		mesh1.position.x = -0.06;
+ 		mesh1.position.z = 0.09;
+
+ 		var mesh2 = new THREE.Mesh(geom1,material);
+ 		mesh2.position.y = 0.4;
+ 		mesh2.position.x = 0.06;
+ 		mesh2.position.z = 0.09;
+
+ 		var mesh3 = new THREE.Mesh(geom2,material2);
+ 		mesh3.position.y = 0.41;
+ 		mesh3.position.z = 0.09;
+
+ 		var mesh4 = new THREE.Mesh(geom3,material2);
+ 		mesh4.position.y = 0.41;
+ 		mesh4.position.z = 0.048;
+ 		mesh4.position.x = 0.088;
+ 		mesh4.rotation.y = THREE.Math.degToRad(90);
+
+ 		var mesh5 = new THREE.Mesh(geom3,material2);
+ 		mesh5.position.y = 0.41;
+ 		mesh5.position.z = 0.048;
+ 		mesh5.position.x = -0.088;
+ 		mesh5.rotation.y = THREE.Math.degToRad(90);
+
+		var light = new THREE.PointLight(0x0000ff,1,1.5);
+		light.position.y = 0.3;
+
+		var inco = new THREE.Group();
+		inco.add(mesh1);
+		inco.add(mesh2);
+		inco.add(mesh3);
+		inco.add(mesh4);
+		inco.add(mesh5);
+		inco.add(light);
+
+		do {
+			var ok = true;
+			var x = Math.floor(Math.random() * Math.floor(mapWidth));
+			var z = Math.floor(Math.random() * Math.floor(mapHeight));
+			
+			listeflaques.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listemurs.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listebonus.forEach(function(element) {
+				if(x == element.objet.position.x && z == element.objet.position.z) {
+						ok = false;
+				}
+			});
+			
+		}
+		while(!ok);
+
+		inco.name = "incognito"+i;
+		inco.position.set(x,0,z);
+		listebonus.push(new Bonus(4,inco));
+		scene.add(inco);
+	}
+
 	//ajouts et positionnements
 	scene.add(sol);
 	
@@ -368,6 +519,11 @@ function init(idPartie) {
 			var z = Math.floor(Math.random() * Math.floor(mapHeight));
 			listemurs.forEach(function(element) {
 				if(x == element.x && z == element.y) {
+					ok = false;
+				}
+			});
+			listebonus.forEach(function(element) {
+				if(x == element.objet.position.x && z == element.objet.position.z){
 					ok = false;
 				}
 			});
@@ -428,6 +584,36 @@ function init(idPartie) {
 				}
 				element.objet.rotation.y += THREE.Math.degToRad(2);
 			}
+			if(element.type == 3) {
+				if(element.anim == 0) {
+					element.objet.position.y += 0.001;
+				}
+				else {
+					element.objet.position.y -= 0.001;
+				}
+				if(element.objet.position.y >= 0.15) {
+					element.anim = 1;
+				}
+				if(element.objet.position.y <= 0.05) {
+					element.anim = 0;
+				}
+				element.objet.rotation.y += THREE.Math.degToRad(2);
+			}
+			if(element.type == 4) {
+				if(element.anim == 0) {
+					element.objet.position.y += 0.001;
+				}
+				else {
+					element.objet.position.y -= 0.001;
+				}
+				if(element.objet.position.y >= 0.15) {
+					element.anim = 1;
+				}
+				if(element.objet.position.y <= 0.05) {
+					element.anim = 0;
+				}
+				element.objet.rotation.y += THREE.Math.degToRad(1);
+			}
 			
 		});
 		requestAnimationFrame(animBonus);
@@ -443,7 +629,10 @@ function init(idPartie) {
 				document.getElementById("nbBonus").innerHTML = "Bottes de vitesse ("+tempsActuelBottes+" secs)";
 				break;
 			case 3 :
-				document.getElementById("nbBonus").innerHTML = "Super Vitesse";
+				document.getElementById("nbBonus").innerHTML = "Cape d'invisibilité ("+tempsActuelInvisiblite+" secs)";
+				break;
+			case 4 :
+				document.getElementById("nbBonus").innerHTML = "Incognito ("+tempsActuelIncognito+" secs)";
 				break;
 			default :
 				document.getElementById("nbBonus").innerHTML = "Objet inconnu";
@@ -621,6 +810,12 @@ function init(idPartie) {
 				case 2:
 					nbbonusBottes -= 1;
 					break;
+				case 3:
+					nbbonusCapes -= 1;
+					break;	
+				case 4:
+					nbbonusIncognito -= 1;
+					break;	
 			}
 		}
 		
@@ -673,7 +868,27 @@ function init(idPartie) {
 				vitDep = 0.2;
 				boostBottes = setInterval(boostVitesse, 1000);
 			}
-		}	
+		}
+
+		// invisibilité
+		if(objetTenu == 3) {
+			if(invisible==0){
+				invisible = 1;
+				tempsActuelInvisiblite = dureeInvisibilite;
+				cube.visible = false;
+				boostInvisibilite = setInterval(modeInvisible, 1000);
+			}
+		}
+
+		// incognito
+		if(objetTenu == 4) {
+			if(incognito==0){
+				incognito = 1;
+				cube.material.color.setHex(0x808080);
+				tempsActuelIncognito = dureeIncognito;
+				boostIncognito = setInterval(modeIncognito, 1000);
+			}
+		}
 	}
 
 	function boostVitesse() {
@@ -685,6 +900,37 @@ function init(idPartie) {
 			objetTenu = 0;
 			bottesActives = 0;
 			tempsActuelBottes = dureeBottes;
+			document.getElementById("nbBonus").innerHTML = "Rien";
+		}
+	}
+
+	function modeInvisible() {
+		tempsActuelInvisiblite--;
+		if(tempsActuelInvisiblite <= 0) {
+			clearInterval(boostInvisibilite);
+			cube.visible = true;
+			boostInvisibilite = null;
+			objetTenu = 0;
+			invisible = 0;
+			tempsActuelInvisiblite = dureeInvisibilite;
+			document.getElementById("nbBonus").innerHTML = "Rien";
+		}
+	} 
+
+	function modeIncognito() {
+		tempsActuelIncognito--;
+		if(tempsActuelIncognito <= 0) {
+			clearInterval(boostIncognito);
+			if(equipe == 0) {
+				cube.material.color.setHex(0xaa0000);	
+			}
+			else {
+				cube.material.color.setHex(0xaaaa00);
+			}
+			boostIncognito = null;
+			objetTenu = 0;
+			incognito = 0;
+			tempsActuelIncognito = dureeIncognito;
 			document.getElementById("nbBonus").innerHTML = "Rien";
 		}
 	}
@@ -758,11 +1004,9 @@ function init(idPartie) {
 						spectate();
 						break;
 					case "KeyQ": // A
-						if(modespectateur==2) navigCam = mod(navigCam-1,tabCamJoueur.length);
 						specJoueur(-1);
 						break;
 					case "KeyW": // Z
-						if(modespectateur==2) navigCam = mod(navigCam+1,tabCamJoueur.length);;
 						specJoueur(1);
 						break;
 				}
@@ -847,7 +1091,9 @@ function init(idPartie) {
 	}
 
 	// fonction pour switch entre les joueurs en mode spectateur
-	function specJoueur() {
+	function specJoueur(x) {
+		// x = 1 ou -1, pour naviguer dans le tableau
+		if(modespectateur==2) navigCam = mod(navigCam-x,tabCamJoueur.length);
 		modespectateur = 2;
 		cam = tabCamJoueur[navigCam];
 		scene.fog = new THREE.Fog(0x000000,3,3.5);	
@@ -905,12 +1151,16 @@ function init(idPartie) {
 		if(equipe == 0) {
 			equipe = 1;
 			document.getElementById("spanEquipe").innerHTML = "TEAM KEKE";
-			cube.material.color.setHex(0xaaaa00);		
+			if(incognito!=1) {
+				cube.material.color.setHex(0xaaaa00);
+			}	
 		}
 		else {
 			equipe = 0;
 			document.getElementById("spanEquipe").innerHTML = "TEAM BLAIREAUX";
-			cube.material.color.setHex(0xaa0000);	
+			if(incognito!=1) {
+				cube.material.color.setHex(0xaa0000);	
+			}
 		}
 	}
 	
