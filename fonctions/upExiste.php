@@ -5,18 +5,25 @@
 	session_start();
 
 	if(isset($_SESSION['user'])){
-		if(isset($_GET['idPartie']) && isset($_GET['posX']) && isset($_GET['posY'])){
+		if(isset($_GET['idPartie'])){
 			$idPartie = htmlspecialchars($_GET['idPartie']);
-			$posX = htmlspecialchars($_GET['posX']);
-			$posY = htmlspecialchars($_GET['posY']);
 			$idUser = $_SESSION['user']->getID();
 
 			global $db;
 
-			$requete = "UPDATE `User-Partie` SET posX=".$posX.", posY=".$posY." WHERE idUser =".$idUser." AND idPartie=".$idPartie;
-			$db->query($requete);
+			$ups = $db->select("idUser, idPartie","`User-Partie`","");
 
-			//echo $err;
+			$existe = false;
+
+			foreach($ups as $up){
+				if($up['idUser'] == $idUser){
+					if($up['idPartie'] == $idPartie){
+						$existe = true;
+					}
+				}
+			}
+
+			echo $existe;
 		}
 	}
 	else{

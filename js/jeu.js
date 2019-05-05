@@ -178,6 +178,7 @@ function createPartie(nbF, nbM, dim){ //Quand quelqu'un crée une partie
 }
 
 function init(idPartie) {
+
 	//scene et rendu
 	var scene = new THREE.Scene();
 	var cam = new THREE.PerspectiveCamera(60,width/height, 0.1,1000);
@@ -185,6 +186,8 @@ function init(idPartie) {
 	scene.fog = new THREE.Fog(0x000000,3,3.5);
 	var renderer = new THREE.WebGLRenderer();
 	renderer.setSize(width,height);
+
+	loadPlayersPosition();
 
 	document.body.appendChild(renderer.domElement);
 
@@ -620,9 +623,55 @@ function init(idPartie) {
 	sol.position.x = mapWidth / 2 - 0.5;
 	sol.position.z = mapHeight / 2 - 0.5;
 	
-	randomPosition();
-		
-		
+	objectXHRUPExiste = new XMLHttpRequest();
+
+	objectXHRUPExiste.open("get","../fonctions/upExiste.php?idPartie="+idPartie,false);
+	//objetXHRUpdatePosJoueur.open("get","../../fonctions/updatePosJoueur.php?idPartie="+idPartie+"&posX="+x+"&posY="+z,false);
+	objectXHRUPExiste.send(null);
+	
+	existe = objectXHRUPExiste.responseText;
+
+	console.log(existe);
+
+	cam.position.y = 0.5;
+	
+	if(existe == false){
+		randomPosition();
+	}
+	else {
+		direction = Math.floor(Math.random() * Math.floor(4));
+		cam.rotation.y = THREE.Math.degToRad(90 - (90*direction));
+		cam.position.y = 0.6;
+
+		objetXHRLoadPosJoueur = new XMLHttpRequest();
+
+		objetXHRLoadPosJoueur.open("get","../fonctions/loadPosJoueur.php?idPartie="+idPartie,false);
+
+		objetXHRLoadPosJoueur.send(null);
+
+		joueur = objetXHRLoadPosJoueur.responseText;
+
+		coordJoueur = joueur.split(" ");
+
+		for(i =0; i < coordJoueur.length-1; i++){
+			var coordX = parseInt(coordJoueur[i].split(',')[0],10);
+			var coordZ = parseInt(coordJoueur[i].split(',')[1],10);
+
+			var geometry = new THREE.BoxGeometry(0.8,0.8,0.8);
+			//A voir pour la couleur en fonction de l'équipe
+			var material = new THREE.MeshPhongMaterial({color: 0xaa0000});
+			var cube = new THREE.Mesh(geometry, material);
+
+			cam.position.x = coordX;
+			cam.position.z = coordZ;
+
+			cube.position.x = coordX;
+			cube.position.z = coordZ;
+			scene.add(cube);
+		}
+	}
+
+			
 	renderer.render(scene,cam);
 	animate();
 	animBonus();
@@ -687,6 +736,8 @@ function init(idPartie) {
 	
 		players = objetXHRLoadPlayers.responseText;
 
+		//console.log(players);
+
 		//Parse le message de retour
 		var coordPlayers = players.split(' ');
 
@@ -694,14 +745,16 @@ function init(idPartie) {
 			var coordX = parseInt(coordPlayers[i].split(',')[0],10);
 			var coordZ = parseInt(coordPlayers[i].split(',')[1],10);
 
+			console.log(coordX+" "+coordZ);
+
 			var geometry = new THREE.BoxGeometry(0.8,0.8,0.8);
 			//A voir pour la couleur en fonction de l'équipe
 			var material = new THREE.MeshPhongMaterial({color: 0xaa0000});
-			var cube = new THREE.Mesh(geometry, material);
+			var player = new THREE.Mesh(geometry, material);
 
-			cube.position.x = coordX;
-			cube.position.z = coordZ;
-			scene.add(cube);
+			player.position.x = coordX;
+			player.position.z = coordZ;
+			scene.add(player);
 		}
 	}
 

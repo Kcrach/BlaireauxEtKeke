@@ -14,15 +14,19 @@
 				$idUser = $_SESSION['user']->getID();
 
 				$up = new UserPartie($idUser, $idPartie, $typeUser, $posX, $posY);
-				$up->ajouterBDPlayer();
+				if($up->exist()==false){
+					$up->ajouterBDPlayer();
+				}
 			}
 			else{
 				$idPartie = htmlspecialchars($_GET['idPartie']);
 				$typeUser = htmlspecialchars($_GET['typeUser']);
 				$idUser = $_SESSION['user']->getID();
 
-				$up = new UserPartie($idUser, $idPartie, $typeUser);
-				$up->ajouterBD();
+				$up = new UserPartie($idUser, $idPartie, $typeUser,"NULL","NULL");
+				if($up->exist()==false){
+					$up->ajouterBD();
+				}
 			}
 		}
 	}
