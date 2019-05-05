@@ -24,16 +24,14 @@ $html = '<!DOCTYPE html>
 	if(isset($_POST['themes'])){
 			$var = $_POST['themes'];
 			if($var == "Défaut"){
-				$html.='<form  id="theme" method="post">
-			  <fieldset id="changetheme">
-				<legend>Theme : </legend>
+				$html.='
+				<span>Theme : </span>
 				<select id="themes" onchange="switchTheme(this.selectedIndex)">
 					<option selected="selected">Défaut</option>
 					<option>Corail</option>
 					<option>Hiver</option>
 				</select>
-			  </fieldset>
-			</form>
+			  
 			</header>';}
 			else{
 			if($var == "Corail"){
