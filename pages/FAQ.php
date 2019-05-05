@@ -20,16 +20,14 @@ $html = '<!DOCTYPE html>
 
 		<header id="header">
 			<h1 id="titre">BLAIREAUX vs KÉKÉS</h1>
-				<form  id="theme" method="post">
-			  <fieldset id="changetheme">
-				<legend>Theme : </legend>
+				
+				<span>Theme : </span>
 				<select id="themes" onchange="switchTheme(this.selectedIndex)">
 					<option selected="selected">Défaut</option>
 					<option>Corail</option>
 					<option>Hiver</option>
 				</select>
-			  </fieldset>
-			</form>
+			  
 		</header>
 
 		<img src="../img/badger.png" align="center"/>';
