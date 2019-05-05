@@ -52,11 +52,11 @@
 							<label>Type de partie :</label>
 							</br>
 							</br>
-							<input type="radio" id="Public" name="typepartie" onchange="typePartie()" value="Publique" checked="checked">
-							<label for="Public"> Partie Publique </label>
-							</br>
-							<input type="radio" id="Privée" name="typepartie" onchange="typePartie()" value="Privée">
+							<input type="radio" id="Privée" name="typepartie" onchange="typePartie()" value="Privée" checked="checked">
 							<label for="Privée"> Partie Privée </label>
+							</br>
+							<input type="radio" id="Public" name="typepartie" onchange="typePartie()" value="Publique">
+							<label for="Public"> Partie Publique </label>
 							</br>
 							</br>
 							<div id="bloqué">
@@ -78,7 +78,8 @@
 						</form>
 
  					  </body>';
-		$html.="<script src='../js/themes.js'></script></html>";
+		$html.="<script src='../js/themes.js'></script>
+		<script src='../js/mdp.js'></script></html>";
 		echo $html;
 
 		/*$m = new Map();
