@@ -42,7 +42,6 @@
 						<form method="post" enctype="" action="RetourAccueil.php">
 							<input type="submit" id="retour" value="Quitter la partie"/>
 						</form>
- 						<script src="../lib/three.js"></script>
  						</body>
 						
 					</html>';

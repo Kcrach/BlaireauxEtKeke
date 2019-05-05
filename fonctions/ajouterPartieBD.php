@@ -5,11 +5,12 @@
 	session_start();
 
 	if(isset($_SESSION['user'])){
-		if(isset($_GET['idMap'])){
+		if(isset($_GET['idMap']) && isset($_GET['dim'])){
 			$date = new DateTime();
 			$idMap = htmlspecialchars($_GET['idMap']);
+			$dim = htmlspecialchars($_GET['dim']);
 
-			$partie = new Partie($idMap);
+			$partie = new Partie($idMap, $dim);
 			$partie->ajouterBD();
 
 			echo intval($partie->getID());

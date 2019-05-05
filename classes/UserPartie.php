@@ -8,14 +8,22 @@
 		private $idPartie;
 		private $idUser;
 		private $typeUser; //Spec/Host/Player
-		//private $posUserX;
-		//private $posUserY;
+		private $posX;
+		private $posY;
 
 		//Constructeur
 		public function __construct($idU, $idP, $typeU){
 			$this->idPartie = $idP;
 			$this->idUser = $idU;
 			$this->typeUser = $typeU;
+		}
+
+		public function __construct($idU, $idP, $typeU, $x, $y){
+			$this->idPartie = $idP;
+			$this->idUser = $idU;
+			$this->typeUser = $typeU;
+			$this->posX = $x;
+			$this->posY = $y;
 		}
 
 		//Set&Get
@@ -31,10 +39,26 @@
 			return $this->typeUser;
 		}
 
+		public function getPosX(){
+			return $this->posX;
+		}
+
+		public function getPosY(){
+			return $this->posY;
+		}
+
 		//Fonctions
 		public function ajouterBD(){
 
-			$requete = "INSERT INTO `User-Partie` VALUES(".$this->idUser.",".$this->idPartie.",'".$this->typeUser."');";
+			$requete = "INSERT INTO `User-Partie` VALUES(".$this->idUser.",".$this->idPartie.",'".$this->typeUser."',NULL,NULL,NULL);";
+
+			global $db;
+			$db->query($requete);
+		}
+
+		public function ajouterBDPlayer(){
+
+			$requete = "INSERT INTO `User-Partie` VALUES(".$this->idUser.",".$this->idPartie.",'".$this->typeUser."',NULL,".$this->posX.",".$this->posY.");";
 
 			global $db;
 			$db->query($requete);

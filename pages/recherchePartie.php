@@ -43,7 +43,11 @@
 				</th>
 				
 			</table>
-			<input type="button" id="BTtrouvée" onclick="trouve();" value="Trouvée">
+			<form method="post" enctype="" action="../pages/test.html">
+				<input type="submit" id="retour" value="Test Rejoindre partie"/>
+ 			</form>
+
+			<!--<input type="button" id="BTtrouvée" onclick="trouve();" value="Trouvée">-->
 			<input type="button" id="BTechec" onclick="echec();" value="Echec">
 
 			<form method="post" enctype="" action="../fonctions/RetourAccueil.php">

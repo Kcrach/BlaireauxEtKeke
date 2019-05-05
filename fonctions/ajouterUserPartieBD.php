@@ -6,12 +6,24 @@
 
 	if(isset($_SESSION['user'])){
 		if(isset($_GET['idPartie']) && isset($_GET['typeUser'])){
-			$idPartie = htmlspecialchars($_GET['idPartie']);
-			$typeUser = htmlspecialchars($_GET['typeUser']);
-			$idUser = $_SESSION['user']->getID();
+			if(isset($_GET['posX']) && isset($_GET['posY'])){
+				$idPartie = htmlspecialchars($_GET['idPartie']);
+				$typeUser = htmlspecialchars($_GET['typeUser']);
+				$posX = htmlspecialchars($_GET['posX']);
+				$posY = htmlspecialchars($_GET['posY']);
+				$idUser = $_SESSION['user']->getID();
 
-			$up = new UserPartie($idUser, $idPartie, $typeUser);
-			$up->ajouterBD();
+				$up = new UserPartie($idUser, $idPartie, $typeUser, $posX, $posY);
+				$up->ajouterBDPlayer();
+			}
+			else{
+				$idPartie = htmlspecialchars($_GET['idPartie']);
+				$typeUser = htmlspecialchars($_GET['typeUser']);
+				$idUser = $_SESSION['user']->getID();
+
+				$up = new UserPartie($idUser, $idPartie, $typeUser);
+				$up->ajouterBD();
+			}
 		}
 	}
 	else{

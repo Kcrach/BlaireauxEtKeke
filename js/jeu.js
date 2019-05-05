@@ -60,6 +60,106 @@ function Bonus(type, objet) {
 	this.anim = 0;
 }
 
+function createPartie(nbF, nbM, dim){ //Quand quelqu'un crée une partie
+	var nbflaques = nbF;
+	var nbmurs = nbM;
+	var dimension = dim;
+	mapHeight = dim;
+	mapWidth = dim;
+
+	objetXHRAjoutMapEnBD  = new XMLHttpRequest();
+
+	objetXHRAjoutMapEnBD.open("get","ajouterMapBD.php",false);
+	objetXHRAjoutMapEnBD.send(null);
+	
+	idMap = parseInt(objetXHRAjoutMapEnBD.responseText,10);
+
+	console.log("ID MAP:" + idMap);
+
+	for(var i=0; i<nbmurs ; i++) {
+		
+		do {
+			var ok = true;
+			var x = Math.floor(Math.random() * Math.floor(dimension-2)) +1;
+			var z = Math.floor(Math.random() * Math.floor(dimension-2)) +1;	
+			listemurs.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+					ok = false;
+				}
+			});
+		}
+		while(!ok);
+		
+		listemurs.push(new Point(x,z));
+		
+		objetXHRAjoutMurEnBD  = new XMLHttpRequest();
+
+		objetXHRAjoutMurEnBD.open("get","ajouterMurBD.php?x="+x+"&y="+z+"&idMap="+idMap,false);
+
+		objetXHRAjoutMurEnBD.send(null);
+
+		/*test = objetXHRAjoutMurEnBD.responseText;
+
+		console.log("Test : "+ test);*/
+	}
+
+	for(var i=0; i<nbflaques ; i++) {
+		
+		do {
+			var ok = true;
+			var x = Math.floor(Math.random() * Math.floor(dimension));
+			var z = Math.floor(Math.random() * Math.floor(dimension));
+			
+			listeflaques.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listemurs.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			
+		}
+		while(!ok);
+		
+		listeflaques.push(new Point(x,z));
+
+		objetXHRAjoutFlaqueEnBD  = new XMLHttpRequest();
+
+		objetXHRAjoutFlaqueEnBD.open("get","ajouterFlaqueBD.php?x="+x+"&y="+z+"&idMap="+idMap,false);
+
+		objetXHRAjoutFlaqueEnBD.send(null);
+
+		/*test = objetXHRAjoutFlaqueEnBD.responseText;
+
+		console.log("Test : "+ test);*/
+	}
+
+	
+
+	objetXHRAjoutPartieEnBD  = new XMLHttpRequest();
+
+	objetXHRAjoutPartieEnBD.open("get","ajouterPartieBD.php?idMap="+idMap+"&dim="+dimension,false);
+	objetXHRAjoutPartieEnBD.send(null);
+
+	idPartie = parseInt(objetXHRAjoutPartieEnBD.responseText,10);
+
+	//console.log("IdP ="+idPartie);
+
+	objetXHRAjoutUPEnBD  = new XMLHttpRequest();
+
+	objetXHRAjoutUPEnBD.open("get","ajouterUserPartieBD.php?idPartie="+idPartie+"&typeUser=host",false);
+	objetXHRAjoutUPEnBD.send(null);
+
+	//test = objetXHRAjoutUPEnBD.responseText;
+
+	//console.log("ajouterPartieBD.php?idMap="+idMap);
+	//console.log("test"+test);
+	init(idPartie);
+}
+
 function init(idPartie) {
 	//scene et rendu
 	var scene = new THREE.Scene();
@@ -81,7 +181,21 @@ function init(idPartie) {
 	var geometry = new THREE.BoxGeometry(0.8,0.8,0.8);
 	var material = new THREE.MeshPhongMaterial({color: 0xaa0000});
 	var cube = new THREE.Mesh(geometry, material);
+
+	//Pour load la dimension de la map
+	objetXHRLoadDim  = new XMLHttpRequest();
+
+	objetXHRLoadDim.open("get","../fonctions/loadDimMap.php?idPartie="+idPartie,false);
+	//objetXHRLoadDim.open("get","../../fonctions/loadDimMap.php?idPartie="+idPartie,false);
+	objetXHRLoadDim.send(null);
 	
+	dim = parseInt(objetXHRLoadDim.responseText,10);
+
+	console.log(dim);
+
+	mapWidth =dim;
+	mapHeight = dim;
+
 	// sol
 	var plan = new THREE.BoxGeometry(mapWidth,1,mapHeight);
 	var solmat = new THREE.MeshPhongMaterial({color: 0x000080});
@@ -92,7 +206,8 @@ function init(idPartie) {
 	//Pour load les murs depuis l'ID de la partie
 	objetXHRLoadMur  = new XMLHttpRequest();
 
-	objetXHRLoadMur.open("get","../../fonctions/loadMurBD.php?idPartie="+idPartie,false);
+	objetXHRLoadMur.open("get","../fonctions/loadMurBD.php?idPartie="+idPartie,false);
+	//objetXHRLoadMur.open("get","../../fonctions/loadMurBD.php?idPartie="+idPartie,false);
 	objetXHRLoadMur.send(null);
 	
 	murs = objetXHRLoadMur.responseText;
@@ -121,7 +236,8 @@ function init(idPartie) {
 	//On load les flaques
 	objetXHRLoadFlaques  = new XMLHttpRequest();
 
-	objetXHRLoadFlaques.open("get","../../fonctions/loadFlaqueBD.php?idPartie="+idPartie,false);
+	objetXHRLoadFlaques.open("get","../fonctions/loadFlaqueBD.php?idPartie="+idPartie,false);
+	//objetXHRLoadFlaques.open("get","../../fonctions/loadFlaqueBD.php?idPartie="+idPartie,false);
 	objetXHRLoadFlaques.send(null);
 	
 	flaques = objetXHRLoadFlaques.responseText;
@@ -373,6 +489,20 @@ function init(idPartie) {
 			});
 		} while(!ok);
 		
+		objetXHRUpdatePosJoueur  = new XMLHttpRequest();
+
+		objetXHRUpdatePosJoueur.open("get","../fonctions/updatePosJoueur.php?idPartie="+idPartie+"&posX="+x+"&posY="+z,false);
+		//objetXHRUpdatePosJoueur.open("get","../../fonctions/updatePosJoueur.php?idPartie="+idPartie+"&posX="+x+"&posY="+z,false);
+		objetXHRUpdatePosJoueur.send(null);
+	
+		//console.log(objetXHRUpdatePosJoueur.responseText);
+
+		objetXHRAjoutUPEnBD  = new XMLHttpRequest();
+
+		objetXHRAjoutUPEnBD.open("get","../fonctions/ajouterUserPartieBD.php?idPartie="+idPartie+"&typeUser=player"+"&posX="+x+"&posY="+z,false);
+		//objetXHRAjoutUPEnBD.open("get","../../fonctions/ajouterUserPartieBD.php?idPartie="+idPartie+"&typeUser=player"+"&posX="+x+"&posY="+z,false);
+		objetXHRAjoutUPEnBD.send(null);
+
 		cube.position.x = x;
 		cube.position.z = z;
 		scene.add(cube);
@@ -385,12 +515,40 @@ function init(idPartie) {
 		cam.position.z = z;
 		cam.rotation.y = THREE.Math.degToRad(90 - (90*direction));
 		
-		debugDir();
-		console.log("Position :"); console.log(cube.position);
-		console.log("\n");
+		//debugDir();
+		//console.log("Position :"); console.log(cube.position);
+		//console.log("\n");
 		checkCol();
 	}	
 	
+	function loadPlayersPosition(){
+		//On load les flaques
+		objetXHRLoadPlayers  = new XMLHttpRequest();
+
+		objetXHRLoadPlayers.open("get","../fonctions/loadPlayersPosition.php?idPartie="+idPartie,false);
+		//objetXHRLoadFlaques.open("get","../../fonctions/loadFlaqueBD.php?idPartie="+idPartie,false);
+		objetXHRLoadPlayers.send(null);
+	
+		players = objetXHRLoadPlayers.responseText;
+
+		//Parse le message de retour
+		var coordPlayers = players.split(' ');
+
+		for(i =0; i < coordPlayers.length-1; i++){
+			var coordX = parseInt(coordPlayers[i].split(',')[0],10);
+			var coordZ = parseInt(coordPlayers[i].split(',')[1],10);
+
+			var geometry = new THREE.BoxGeometry(0.8,0.8,0.8);
+			//A voir pour la couleur en fonction de l'équipe
+			var material = new THREE.MeshPhongMaterial({color: 0xaa0000});
+			var cube = new THREE.Mesh(geometry, material);
+
+			cube.position.x = coordX;
+			cube.position.z = coordZ;
+			scene.add(cube);
+		}
+	}
+
 	function animate(){
 		requestAnimationFrame(animate);
 		renderer.render(scene,cam);
@@ -486,6 +644,17 @@ function init(idPartie) {
 			cube.position.z += vitDep;
 			cam.position.z += vitDep;
 		}
+
+		objetXHRUpdatePosJoueur  = new XMLHttpRequest();
+
+		var x = cube.position.x;
+		var z = cube.position.z;
+
+		objetXHRUpdatePosJoueur.open("get","../fonctions/updatePosJoueur.php?idPartie="+idPartie+"&posX="+x+"&posY="+z,false);
+		//objetXHRUpdatePosJoueur.open("get","../../fonctions/updatePosJoueur.php?idPartie="+idPartie+"&posX="+x+"&posY="+z,false);
+		objetXHRUpdatePosJoueur.send(null);
+	
+		//console.log(objetXHRUpdatePosJoueur.responseText);
 		
 		moveCpt += vitDep;
 		

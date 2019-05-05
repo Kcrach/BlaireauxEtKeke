@@ -34,7 +34,6 @@ DROP TABLE IF EXISTS `map`;
 -- Structure de la table `flaque`
 --
 
-
 CREATE TABLE IF NOT EXISTS `flaque` (
   `idMap` int(11) NOT NULL,
   `posX` int(11) NOT NULL,
@@ -74,9 +73,11 @@ CREATE TABLE IF NOT EXISTS `mur` (
 
 CREATE TABLE IF NOT EXISTS `partie` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `etat` tinyint(1) NOT NULL COMMENT 'Terminé = 1 /En Cours = 0',
+  `etat` tinyint(1) NOT NULL COMMENT 'Terminé = -1 /En Attente = 0/En Cours = 1',
   `date` datetime NOT NULL,
   `idMap` int(11) NOT NULL,
+  `nbParticipant` int(11) NOT NULL,
+  `dimension` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idMap` (`idMap`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Partie';
@@ -115,8 +116,9 @@ CREATE TABLE IF NOT EXISTS `user-partie` (
   `idUser` int(11) NOT NULL,
   `idPartie` int(11) NOT NULL,
   `typeUser` varchar(20) NOT NULL COMMENT 'Joueur/Host/Spec',
-  `posX` int(11),
-  `posY` int(11),
+  `posX` int(11) DEFAULT NULL,
+  `posY` int(11) DEFAULT NULL,
+  `equipe` varchar(20) DEFAULT NULL,
   KEY `idUser` (`idUser`),
   KEY `idPartie` (`idPartie`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

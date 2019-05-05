@@ -7,11 +7,13 @@
 		private $etat;
 		private $date;
 		private $idMap;
+		private $dimension;
 
 		//Constructeur
-		public function __construct($idM){
+		public function __construct($idM, $dim){
 			$this->etat = 0;
 			$this->idMap = $idM;
+			$this->dimension = $dim;
 		}
 
 		//Set&Get
@@ -27,10 +29,14 @@
 			return $this->idMap;
 		}
 
+		public function getDim(){
+			return $this->dimension;
+		}
+
 		//Fonctions
 		public function ajouterBD(){
 
-			$requete = "INSERT INTO Partie VALUES(NULL,".$this->etat.",SYSDATE(),".$this->idMap.");";
+			$requete = "INSERT INTO Partie VALUES(NULL,".$this->etat.",SYSDATE(),".$this->idMap.",1,".$this->dimension.");";
 
 			global $db;
 			$db->query($requete);
