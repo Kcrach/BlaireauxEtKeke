@@ -391,7 +391,7 @@ select{
 	border-radius: 5px;
 }
 
-#CréerPartie, #RechPartie, #Rank{
+#CréerPartie, #RechPartie, #Rank, #FAQ, #liensut{
 	background-color: lightsalmon;
 	margin-top: 20px;
 	width: 150px;
@@ -400,7 +400,7 @@ select{
 	transition: 0.15s;
 }
 
-#CréerPartie:hover, #RechPartie:hover, #Rank:hover{
+#CréerPartie:hover, #RechPartie:hover, #Rank:hover, #FAQ:hover, #liensut:hover{
 	margin-top: 15px;
 	height: 45px;
 }
