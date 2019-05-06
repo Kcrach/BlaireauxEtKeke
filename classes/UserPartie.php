@@ -12,12 +12,6 @@
 		private $posY;
 
 		//Constructeur
-		public function __construct($idU, $idP, $typeU){
-			$this->idPartie = $idP;
-			$this->idUser = $idU;
-			$this->typeUser = $typeU;
-		}
-
 		public function __construct($idU, $idP, $typeU, $x, $y){
 			$this->idPartie = $idP;
 			$this->idUser = $idU;
@@ -48,6 +42,23 @@
 		}
 
 		//Fonctions
+		public function exist(){
+			global $db;
+			$ups = $db->select("idUser, idPartie","`User-Partie`","");
+
+			$existe = false;
+
+			foreach($ups as $up){
+				if($up['idUser'] == $this->idUser){
+					if($up['idPartie'] == $this->idPartie){
+						$existe = true;
+					}
+				}
+			}
+
+			return $existe;
+		}
+
 		public function ajouterBD(){
 
 			$requete = "INSERT INTO `User-Partie` VALUES(".$this->idUser.",".$this->idPartie.",'".$this->typeUser."',NULL,NULL,NULL);";
@@ -58,7 +69,7 @@
 
 		public function ajouterBDPlayer(){
 
-			$requete = "INSERT INTO `User-Partie` VALUES(".$this->idUser.",".$this->idPartie.",'".$this->typeUser."',NULL,".$this->posX.",".$this->posY.");";
+			$requete = "INSERT INTO `User-Partie` VALUES(".$this->idUser.",".$this->idPartie.",'".$this->typeUser."',".$this->posX.",".$this->posY.",NULL);";
 
 			global $db;
 			$db->query($requete);

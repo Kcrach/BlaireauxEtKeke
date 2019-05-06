@@ -4,7 +4,7 @@
 	session_start();
 
 	if(isset($_SESSION['user'])){
-		echo $_GET['x'];
+		//echo $_GET['x'];
 
 		if(isset($_GET['idMap']) && isset($_GET['y']) && isset($_GET['x'])){
 			$idMap = htmlspecialchars($_GET['idMap']);

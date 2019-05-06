@@ -5,18 +5,22 @@
 	session_start();
 
 	if(isset($_SESSION['user'])){
-		if(isset($_GET['idPartie']) && isset($_GET['posX']) && isset($_GET['posY'])){
+		if(isset($_GET['idPartie'])){
 			$idPartie = htmlspecialchars($_GET['idPartie']);
-			$posX = htmlspecialchars($_GET['posX']);
-			$posY = htmlspecialchars($_GET['posY']);
 			$idUser = $_SESSION['user']->getID();
 
 			global $db;
 
-			$requete = "UPDATE `User-Partie` SET posX=".$posX.", posY=".$posY." WHERE idUser =".$idUser." AND idPartie=".$idPartie;
-			$db->query($requete);
+			$requete = "SELECT posX,posY FROM `User-Partie` WHERE idUser =".$idUser." AND idPartie=".$idPartie;
+			$res= $db->query($requete);
 
-			//echo $err;
+			$coordJoueur = "";
+
+			foreach($res as $joueur){
+				$coordJoueur.=$joueur['posX'].','.$joueur['posY'].' ';			
+			}
+
+			echo $coordJoueur;
 		}
 	}
 	else{

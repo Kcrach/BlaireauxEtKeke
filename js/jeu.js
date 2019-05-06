@@ -14,10 +14,11 @@ var listeflaques = [];
 var nbcapes = 3;
 var listecapes = [];
 
-var nbbonusVue = 2;
+var nbbonusVue = 1;
 var nbbonusBottes = 2;
+var nbbonusBouclier = 2;
 var nbbonusCapes = 2;
-var nbbonusIncognito = 3;
+var nbbonusIncognito = 1;
 var listebonus = [];
 
 // objet tenu, 0 = pas d'objet, 1 = super-vue, ...
@@ -60,6 +61,11 @@ var incognito = 0 // bool cape d'invisibilité
 var boostIncognito = null // compte à rebour invisibilité
 var dureeIncognito = 6;
 var tempsActuelIncognito = 6;
+
+var bouclier = 0 // bool bouclier
+var boostBouclier = null // compte à rebour bouclier
+var dureeBouclier = 6;
+var tempsActuelBouclier = 6;
 
 // mode spectateur
 var modespectateur = 0;
@@ -178,6 +184,7 @@ function createPartie(nbF, nbM, dim){ //Quand quelqu'un crée une partie
 }
 
 function init(idPartie) {
+
 	//scene et rendu
 	var scene = new THREE.Scene();
 	var cam = new THREE.PerspectiveCamera(60,width/height, 0.1,1000);
@@ -185,6 +192,8 @@ function init(idPartie) {
 	scene.fog = new THREE.Fog(0x000000,3,3.5);
 	var renderer = new THREE.WebGLRenderer();
 	renderer.setSize(width,height);
+
+	loadPlayersPosition();
 
 	document.body.appendChild(renderer.domElement);
 
@@ -609,6 +618,62 @@ function init(idPartie) {
 		scene.add(inco);
 	}
 
+	// bonus Bouclier
+	for(var i=0; i<nbbonusBouclier ; i++) {
+ 		var geom1 = new THREE.BoxGeometry(0.4,0.4,0.02);
+ 		var geom2 = new THREE.BoxGeometry(0.2,0.2,0.02);
+
+ 		var material = new THREE.MeshBasicMaterial({color: 0xffce33}); 
+ 		var material2 = new THREE.MeshBasicMaterial({color: 0xff9633}); 
+
+ 		var mesh1 = new THREE.Mesh(geom1,material);
+ 		mesh1.position.y = 0.4;
+ 		mesh1.position.x = -0.02;
+ 		mesh1.position.z = 0.09;
+
+ 		var mesh2 = new THREE.Mesh(geom1,material);
+ 		mesh2.position.y = 0.4;
+ 		mesh2.position.x = 0.02;
+ 		mesh2.position.z = 0.09;
+
+
+		var light = new THREE.PointLight(0xffff00,1,1.5);
+		light.position.y = 0.3;
+
+		var bouc = new THREE.Group();
+		bouc.add(mesh1);
+		bouc.add(mesh2);
+		bouc.add(light);
+
+		do {
+			var ok = true;
+			var x = Math.floor(Math.random() * Math.floor(mapWidth));
+			var z = Math.floor(Math.random() * Math.floor(mapHeight));
+			
+			listeflaques.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listemurs.forEach(function(element) {
+				if(x == element.x && z == element.y) {
+						ok = false;
+				}
+			});
+			listebonus.forEach(function(element) {
+				if(x == element.objet.position.x && z == element.objet.position.z) {
+						ok = false;
+				}
+			});
+			
+		}
+		while(!ok);
+		bouc.name = "bouclier"+i;
+		bouc.position.set(x,0,z);
+		listebonus.push(new Bonus(5,bouc));
+		scene.add(bouc);
+	}
+
 	//ajouts et positionnements
 	scene.add(sol);
 	
@@ -620,9 +685,55 @@ function init(idPartie) {
 	sol.position.x = mapWidth / 2 - 0.5;
 	sol.position.z = mapHeight / 2 - 0.5;
 	
-	randomPosition();
-		
-		
+	objectXHRUPExiste = new XMLHttpRequest();
+
+	objectXHRUPExiste.open("get","../fonctions/upExiste.php?idPartie="+idPartie,false);
+	//objetXHRUpdatePosJoueur.open("get","../../fonctions/updatePosJoueur.php?idPartie="+idPartie+"&posX="+x+"&posY="+z,false);
+	objectXHRUPExiste.send(null);
+	
+	existe = objectXHRUPExiste.responseText;
+
+	console.log(existe);
+
+	cam.position.y = 0.5;
+	
+	if(existe == false){
+		randomPosition();
+	}
+	else {
+		direction = Math.floor(Math.random() * Math.floor(4));
+		cam.rotation.y = THREE.Math.degToRad(90 - (90*direction));
+		cam.position.y = 0.6;
+
+		objetXHRLoadPosJoueur = new XMLHttpRequest();
+
+		objetXHRLoadPosJoueur.open("get","../fonctions/loadPosJoueur.php?idPartie="+idPartie,false);
+
+		objetXHRLoadPosJoueur.send(null);
+
+		joueur = objetXHRLoadPosJoueur.responseText;
+
+		coordJoueur = joueur.split(" ");
+
+		for(i =0; i < coordJoueur.length-1; i++){
+			var coordX = parseInt(coordJoueur[i].split(',')[0],10);
+			var coordZ = parseInt(coordJoueur[i].split(',')[1],10);
+
+			var geometry = new THREE.BoxGeometry(0.8,0.8,0.8);
+			//A voir pour la couleur en fonction de l'équipe
+			var material = new THREE.MeshPhongMaterial({color: 0xaa0000});
+			var cube = new THREE.Mesh(geometry, material);
+
+			cam.position.x = coordX;
+			cam.position.z = coordZ;
+
+			cube.position.x = coordX;
+			cube.position.z = coordZ;
+			scene.add(cube);
+		}
+	}
+
+			
 	renderer.render(scene,cam);
 	animate();
 	animBonus();
@@ -687,6 +798,8 @@ function init(idPartie) {
 	
 		players = objetXHRLoadPlayers.responseText;
 
+		//console.log(players);
+
 		//Parse le message de retour
 		var coordPlayers = players.split(' ');
 
@@ -694,14 +807,16 @@ function init(idPartie) {
 			var coordX = parseInt(coordPlayers[i].split(',')[0],10);
 			var coordZ = parseInt(coordPlayers[i].split(',')[1],10);
 
+			console.log(coordX+" "+coordZ);
+
 			var geometry = new THREE.BoxGeometry(0.8,0.8,0.8);
 			//A voir pour la couleur en fonction de l'équipe
 			var material = new THREE.MeshPhongMaterial({color: 0xaa0000});
-			var cube = new THREE.Mesh(geometry, material);
+			var player = new THREE.Mesh(geometry, material);
 
-			cube.position.x = coordX;
-			cube.position.z = coordZ;
-			scene.add(cube);
+			player.position.x = coordX;
+			player.position.z = coordZ;
+			scene.add(player);
 		}
 	}
 
@@ -772,6 +887,21 @@ function init(idPartie) {
 				}
 				element.objet.rotation.y += THREE.Math.degToRad(1);
 			}
+			if(element.type == 5) {
+				if(element.anim == 0) {
+					element.objet.position.y += 0.001;
+				}
+				else {
+					element.objet.position.y -= 0.001;
+				}
+				if(element.objet.position.y >= 0.15) {
+					element.anim = 1;
+				}
+				if(element.objet.position.y <= 0.05) {
+					element.anim = 0;
+				}
+				element.objet.rotation.y += THREE.Math.degToRad(1);
+			}
 			
 		});
 		requestAnimationFrame(animBonus);
@@ -791,6 +921,9 @@ function init(idPartie) {
 				break;
 			case 4 :
 				document.getElementById("nbBonus").innerHTML = "Incognito ("+tempsActuelIncognito+" secs)";
+				break;
+			case 5 :
+				document.getElementById("nbBonus").innerHTML = "Bouclier ("+tempsActuelBouclier+" secs)";
 				break;
 			default :
 				document.getElementById("nbBonus").innerHTML = "Objet inconnu";
@@ -860,6 +993,7 @@ function init(idPartie) {
 			console.log(cube.position);
 			console.log("\n");
 			
+			//checkJoueur() 
 			checkTeleportFlaque();
 			checkCol();
 			checkBonus();
@@ -984,11 +1118,49 @@ function init(idPartie) {
 					break;	
 				case 4:
 					nbbonusIncognito -= 1;
+				case 5:
+					nbbonusBouclier -= 1;
 					break;	
 			}
 		}
 		
 	}
+
+	/*
+	// rencontre avec un autre joueur
+	function checkJoueur() {
+		var ok = false;
+		var e;
+		listejoueurs.forEach(function(element) {
+			if(cube.position.x == element.objet.position.x && cube.position.z == element.objet.position.z) {
+				ok = true;
+				e = element;
+			}
+		});
+		if(ok) {
+			// si l'on peut manger et que l'autre n'est pas invincible
+			if(equipe==1 && e.bouclier==0) {
+				scene.remove(e.objet);
+				for(var i = 0; i < listejoueurs.length; i++){ 
+					if(listejoueurs[i].objet.id == e.objet.id) {
+				    	listejoueurs.splice(i, 1); 
+			   		}
+				}
+				// passer l'autre en mode spectateur
+			}
+			// si l'autre peut manger et que l'on est pas invincible
+			else if(e.equipe == 1 && equipe==0) {
+				scene.remove(cube);
+				for(var i = 0; i < listejoueurs.length; i++){ 
+					if(listejoueurs[i].objet.id == id) {
+				    	listejoueurs.splice(i, 1); 
+			   		}
+				}
+				// nous faire passer en spectateur
+			}	
+		}	
+	}
+	*/
 
 	function utiliserBonus() {
 		//action super-vue
@@ -1034,7 +1206,8 @@ function init(idPartie) {
 			if(bottesActives==0){
 				bottesActives = 1;
 				tempsActuelBottes = dureeBottes;
-				vitDep = 0.2;
+				vitDep *= 2;
+				vitRot *= 2;
 				boostBottes = setInterval(boostVitesse, 1000);
 			}
 		}
@@ -1058,6 +1231,20 @@ function init(idPartie) {
 				boostIncognito = setInterval(modeIncognito, 1000);
 			}
 		}
+		// Bouclier
+		if(objetTenu == 5) {
+			if(bouclier==0){
+				bouclier = 1;
+				if(equipe == 0) {
+					cube.material.color.setHex(0x853b29);	
+				}
+				else {
+					cube.material.color.setHex(0xff8300);	
+				}
+				tempsActuelBouclier = dureeBouclier;
+				boostBouclier = setInterval(modeBouclier, 1000);
+			}
+		}
 	}
 
 	function boostVitesse() {
@@ -1065,7 +1252,8 @@ function init(idPartie) {
 		if(tempsActuelBottes <= 0) {
 			clearInterval(boostBottes);
 			boostBottes = null;
-			vitDep = 0.1;
+			vitDep /= 2;
+			vitRot /= 2;
 			objetTenu = 0;
 			bottesActives = 0;
 			tempsActuelBottes = dureeBottes;
@@ -1100,6 +1288,24 @@ function init(idPartie) {
 			objetTenu = 0;
 			incognito = 0;
 			tempsActuelIncognito = dureeIncognito;
+			document.getElementById("nbBonus").innerHTML = "Rien";
+		}
+	}
+
+	function modeBouclier() {
+		tempsActuelBouclier--;
+		if(tempsActuelBouclier <= 0) {
+			clearInterval(boostBouclier);
+			if(equipe == 0) {
+				cube.material.color.setHex(0xaa0000);	
+			}
+			else {
+				cube.material.color.setHex(0xaaaa00);
+			}
+			boostBouclier = null;
+			objetTenu = 0;
+			bouclier = 0;
+			tempsActuelBouclier = dureeBouclier;
 			document.getElementById("nbBonus").innerHTML = "Rien";
 		}
 	}
