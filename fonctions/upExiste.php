@@ -11,7 +11,7 @@
 
 			global $db;
 
-			$ups = $db->select("idUser, idPartie","`User-Partie`","");
+			$ups = $db->select("idUser, idPartie","`User-Partie`","typeUser='player'");
 
 			$existe = false;
 
