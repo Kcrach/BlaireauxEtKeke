@@ -119,6 +119,7 @@ CREATE TABLE IF NOT EXISTS `user-partie` (
   `posX` int(11) DEFAULT NULL,
   `posY` int(11) DEFAULT NULL,
   `equipe` varchar(20) DEFAULT NULL,
+  `direction` int(11) DEFAULT NULL,
   KEY `idUser` (`idUser`),
   KEY `idPartie` (`idPartie`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

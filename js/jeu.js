@@ -701,8 +701,6 @@ function init(idPartie) {
 		randomPosition();
 	}
 	else {
-		direction = Math.floor(Math.random() * Math.floor(4));
-		cam.rotation.y = THREE.Math.degToRad(90 - (90*direction));
 		cam.position.y = 0.6;
 
 		objetXHRLoadPosJoueur = new XMLHttpRequest();
@@ -718,6 +716,7 @@ function init(idPartie) {
 		for(i =0; i < coordJoueur.length-1; i++){
 			var coordX = parseInt(coordJoueur[i].split(',')[0],10);
 			var coordZ = parseInt(coordJoueur[i].split(',')[1],10);
+			var dir = parseInt(coordJoueur[i].split(',')[2],10);
 
 			var geometry = new THREE.BoxGeometry(0.8,0.8,0.8);
 			//A voir pour la couleur en fonction de l'équipe
@@ -726,6 +725,12 @@ function init(idPartie) {
 
 			cam.position.x = coordX;
 			cam.position.z = coordZ;
+
+			cam.position.y = 0.5;
+
+			cam.rotation.y =THREE.Math.degToRad(90-(90*dir));
+			cube.rotation.y =THREE.Math.degToRad(90-(90*dir));
+			direction = dir;
 
 			cube.position.x = coordX;
 			cube.position.z = coordZ;
@@ -756,6 +761,8 @@ function init(idPartie) {
 			});
 		} while(!ok);
 		
+		direction = Math.floor(Math.random() * Math.floor(4));
+
 		objetXHRUpdatePosJoueur  = new XMLHttpRequest();
 
 		objetXHRUpdatePosJoueur.open("get","../fonctions/updatePosJoueur.php?idPartie="+idPartie+"&posX="+x+"&posY="+z,false);
@@ -766,21 +773,20 @@ function init(idPartie) {
 
 		objetXHRAjoutUPEnBD  = new XMLHttpRequest();
 
-		objetXHRAjoutUPEnBD.open("get","../fonctions/ajouterUserPartieBD.php?idPartie="+idPartie+"&typeUser=player"+"&posX="+x+"&posY="+z,false);
+		objetXHRAjoutUPEnBD.open("get","../fonctions/ajouterUserPartieBD.php?idPartie="+idPartie+"&typeUser=player"+"&posX="+x+"&posY="+z+"&dir="+direction,false);
 		//objetXHRAjoutUPEnBD.open("get","../../fonctions/ajouterUserPartieBD.php?idPartie="+idPartie+"&typeUser=player"+"&posX="+x+"&posY="+z,false);
 		objetXHRAjoutUPEnBD.send(null);
 
 		cube.position.x = x;
 		cube.position.z = z;
 		scene.add(cube);
-
-		direction = Math.floor(Math.random() * Math.floor(4));
-		
+	
 		// réglages cam
 		cam.position.y = 0.5;
 		cam.position.x = x;
 		cam.position.z = z;
 		cam.rotation.y = THREE.Math.degToRad(90 - (90*direction));
+		cube.rotation.y = THREE.Math.degToRad(90 - (90*direction));
 		
 		//debugDir();
 		//console.log("Position :"); console.log(cube.position);
@@ -1024,7 +1030,14 @@ function init(idPartie) {
 			
 			checkCol();
 		}
-		else requestAnimationFrame(rotate);			
+		else requestAnimationFrame(rotate);		
+
+		objetXHRUpdateDirJoueur  = new XMLHttpRequest();
+
+		objetXHRUpdateDirJoueur.open("get","../fonctions/updateDirJoueur.php?idPartie="+idPartie+"&direction="+direction,false);
+		//objetXHRUpdatePosJoueur.open("get","../../fonctions/updatePosJoueur.php?idPartie="+idPartie+"&posX="+x+"&posY="+z,false);
+		objetXHRUpdateDirJoueur.send(null);
+	
 	}
 	
 	// met à jour le booléen blocked 

@@ -10,9 +10,10 @@
 		private $typeUser; //Spec/Host/Player
 		private $posX;
 		private $posY;
+		private $direction;
 
 		//Constructeur
-		public function __construct($idU, $idP, $typeU, $x, $y){
+		public function __construct($idU, $idP, $typeU, $x, $y,$direction){
 			$this->idPartie = $idP;
 			$this->idUser = $idU;
 			$this->typeUser = $typeU;
@@ -41,6 +42,10 @@
 			return $this->posY;
 		}
 
+		public function getDirection(){
+			return $this->direction;
+		}
+
 		//Fonctions
 		public function exist(){
 			global $db;
@@ -61,7 +66,7 @@
 
 		public function ajouterBD(){
 
-			$requete = "INSERT INTO `User-Partie` VALUES(".$this->idUser.",".$this->idPartie.",'".$this->typeUser."',NULL,NULL,NULL);";
+			$requete = "INSERT INTO `User-Partie` VALUES(".$this->idUser.",".$this->idPartie.",'".$this->typeUser."',NULL,NULL,NULL,NULL);";
 
 			global $db;
 			$db->query($requete);
@@ -69,7 +74,7 @@
 
 		public function ajouterBDPlayer(){
 
-			$requete = "INSERT INTO `User-Partie` VALUES(".$this->idUser.",".$this->idPartie.",'".$this->typeUser."',".$this->posX.",".$this->posY.",NULL);";
+			$requete = "INSERT INTO `User-Partie` VALUES(".$this->idUser.",".$this->idPartie.",'".$this->typeUser."',".$this->posX.",".$this->posY.",NULL,".$this->direction.");";
 
 			global $db;
 			$db->query($requete);
