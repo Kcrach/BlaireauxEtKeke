@@ -21,7 +21,7 @@ function texte2(){
 	function texte4(){
 	
 			document.getElementById("reponse").innerHTML = "<h1>Un mentor?</h1><br/>"; 
-			document.getElementById("reponse").innerHTML += "<p>Notre mentor à tous est évidemment l'extraordinaire, incroyable et exceptionnel M.Gentil, en compagnie sa fidèle partenaire Lylia Labrouck.</p> </br>"; 
+			document.getElementById("reponse").innerHTML += "<p>Notre mentor à tous est évidemment l'extraordinaire, incroyable et exceptionnel M.Gentil, en compagnie sa fidèle partenaire Lylia Abrouk.</p> </br>"; 
 			document.getElementById("reponse").innerHTML += "<p>Il nous à apporté à tous la force et le courage de poursuivre ce projet, de par son aura, et le modèle qu'il représente pour nous tous.</p><br/>";
 
 	}
