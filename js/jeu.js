@@ -734,6 +734,7 @@ function init(idPartie) {
 
 			cube.position.x = coordX;
 			cube.position.z = coordZ;
+			cube.position.y = 0.5;
 			scene.add(cube);
 		}
 	}
@@ -822,6 +823,7 @@ function init(idPartie) {
 
 			player.position.x = coordX;
 			player.position.z = coordZ;
+			player.position.y = 0.5;
 			scene.add(player);
 		}
 	}
